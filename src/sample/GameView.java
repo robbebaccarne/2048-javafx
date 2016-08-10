@@ -9,6 +9,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 import java.awt.*;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -17,6 +18,8 @@ class GameView {
     private Stage primaryStage;
     private Game game;
     private final Pane board = new Pane();
+
+    private ArrayDeque<Game.Move> queuedMoves = new ArrayDeque<>();
 
     GameView(Stage primaryStage, Game game) {
         this.primaryStage = primaryStage;
@@ -31,6 +34,11 @@ class GameView {
         }
     }
 
+    void queueMove(Game.Move move) {
+        queuedMoves.add(move);
+        System.out.println("welp: " + queuedMoves);
+    }
+
     void setup() {
         StackPane root = new StackPane();
         root.getChildren().add(buildBackground());
@@ -42,16 +50,16 @@ class GameView {
         primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, (keyEvent) -> {
             switch (keyEvent.getCode()) {
                 case UP:
-                    game.queueMove(Game.Move.Up);
+                    queueMove(Game.Move.Up);
                     break;
                 case DOWN:
-                    game.queueMove(Game.Move.Down);
+                    queueMove(Game.Move.Down);
                     break;
                 case LEFT:
-                    game.queueMove(Game.Move.Left);
+                    queueMove(Game.Move.Left);
                     break;
                 case RIGHT:
-                    game.queueMove(Game.Move.Right);
+                    queueMove(Game.Move.Right);
                     break;
             }
         });
