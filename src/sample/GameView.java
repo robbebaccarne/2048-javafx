@@ -39,12 +39,23 @@ class GameView {
         Scene scene = new Scene(root, Config.BOARD_PIXEL_LENGTH, Config.BOARD_PIXEL_LENGTH, Config.BACKGROUND_COLOR);
         primaryStage.setResizable(false);
         primaryStage.setScene(scene);
-        primaryStage.show();
-
         primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, (keyEvent) -> {
-//            keyEvent
-            System.out.println("welp: " + keyEvent);
+            switch (keyEvent.getCode()) {
+                case UP:
+                    game.queueMove(Game.Move.Up);
+                    break;
+                case DOWN:
+                    game.queueMove(Game.Move.Down);
+                    break;
+                case LEFT:
+                    game.queueMove(Game.Move.Left);
+                    break;
+                case RIGHT:
+                    game.queueMove(Game.Move.Right);
+                    break;
+            }
         });
+        primaryStage.show();
     }
 
     private Pane buildBackground() {
