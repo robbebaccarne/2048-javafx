@@ -34,9 +34,24 @@ class GameView {
         }
     }
 
-    void queueMove(Game.Move move) {
+    private void queueMove(Game.Move move) {
         queuedMoves.add(move);
         System.out.println("welp: " + queuedMoves);
+        runNextMove();
+    }
+
+    private void runNextMove() {
+        if (queuedMoves.isEmpty())
+            return;
+
+        final Game.Move nextMove = queuedMoves.pop();
+        final Game.MoveResult result = game.runMove(nextMove);
+
+        for (Tile movedTile : result.movedTiles) {
+            final TileView tileView = visibleTileViews.get(movedTile);
+            tileView
+        }
+
     }
 
     void setup() {
