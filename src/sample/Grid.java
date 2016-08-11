@@ -18,20 +18,14 @@ class Grid {
         }
     }
 
-    class MergeResult {
-        boolean didChange;
-        ArrayList<Tile> mergedTiles = new ArrayList<>();
-        ArrayList<Tile> newTilesFromMerge = new ArrayList<>();
-    }
-
-    Grid rotatedGridClockwise() {
-        Grid newGrid = new Grid();
+    void rotateClockwise() {
+        Tile[][] newTiles = new Tile[Config.GRID_SIZE][Config.GRID_SIZE];
         for (int y = 0; y < Config.GRID_SIZE; y++) {
             for (int x = 0; x < Config.GRID_SIZE; x++) {
-                newGrid.tiles[y][x] = this.tiles[x][Config.GRID_SIZE - y - 1];
+                newTiles[y][x] = tiles[(Config.GRID_SIZE - 1) - x][y];
             }
         }
-        return newGrid;
+        tiles = newTiles;
     }
 
     MergeResult mergeLeft() {
@@ -46,45 +40,45 @@ class Grid {
             for (int x = 0; x < Config.GRID_SIZE; x++) {
                 Tile currentTile = tiles[y][x];
 
-                // on first iteration, lastUnmergedTile will be null
-                if (lastUnmergedTile == null) {
+                if (currentTile == null) {
 
-                    // either this is the first iteration, or we just merged.
+                    // this is an empty space, so just skip it.
+
+                } else if (lastUnmergedTile == null) {
+
+                    // we're on a valid tile, but we dont have a mergeable tile behind us.
                     lastUnmergedTile = currentTile;
-                    continue;
 
-                } else if (currentTile == null) {
+                } else if (currentTile.value != lastUnmergedTile.value) {
 
-                    // we have an unmerged tile, but this is an empty space, so continue.
-                    continue;
+                    // we have two tiles in the row, but they're different
+                    newRow.add(lastUnmergedTile);
+                    lastUnmergedTile = currentTile;
 
                 } else {
 
-                    // we have an unmerged tile, and we have a current tile!
+                    // we have a match we can merge! GO GO GO GO GO!!!
+                    mergeResult.mergedTiles.add(lastUnmergedTile);
+                    mergeResult.mergedTiles.add(currentTile);
 
-                    if (currentTile.value == lastUnmergedTile.value) {
-                        // they're the same! time to merge! GO GO GO GO GO!!!
+                    Tile newTile = new Tile(currentTile.value + 1);
+                    newRow.add(newTile);
+                    mergeResult.newTilesFromMerge.add(newTile);
 
-                        // we have a merge! deal with it.
-                        mergeResult.mergedTiles.add(lastUnmergedTile);
-                        mergeResult.mergedTiles.add(currentTile);
+                    newTile.mergedFrom.add(lastUnmergedTile);
+                    newTile.mergedFrom.add(currentTile);
 
-                        Tile newTile = new Tile(currentTile.value + 1);
-                        newRow.add(newTile);
-                        mergeResult.newTilesFromMerge.add(newTile);
+                    // afterwards, reset lastUnmergedTile to null so the next iteration of this loop can start fresh:
+                    lastUnmergedTile = null;
 
-                        // afterwards, reset lastUnmergedTile to null so the next iteration of this loop can start fresh:
-                        lastUnmergedTile = null;
-                    } else {
-                        // hmm, they're not the same. okay, skip this one.
-                        newRow.add(lastUnmergedTile);
-                        lastUnmergedTile = currentTile;
-                        continue;
-                    }
                 }
             }
 
-            for (int i = 0; i < Config.GRID_SIZE - newRow.size(); i++) {
+            if (lastUnmergedTile != null)
+                newRow.add(lastUnmergedTile);
+
+            final int emptyCellsToFill = Config.GRID_SIZE - newRow.size();
+            for (int i = 0; i < emptyCellsToFill; i++) {
                 newRow.add(null);
             }
 
@@ -134,6 +128,12 @@ class Grid {
             this.x = x;
             this.y = y;
         }
+    }
+
+    class MergeResult {
+        boolean didChange;
+        ArrayList<Tile> mergedTiles = new ArrayList<>();
+        ArrayList<Tile> newTilesFromMerge = new ArrayList<>();
     }
 
 }

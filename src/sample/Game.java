@@ -16,21 +16,22 @@ class Game {
     MoveResult runMove(Move move) {
         MoveResult moveResult = new MoveResult();
 
-        int rotations = move.rotations;
-
         Grid.MergeResult mergeResult = null;
-
-        Grid tempGrid = grid;
         for (int i = 0; i < 4; i++) {
-            if (i == rotations) {
-                mergeResult = tempGrid.mergeLeft();
+            if (i == move.rotations) {
+                mergeResult = grid.mergeLeft();
             }
-            tempGrid = tempGrid.rotatedGridClockwise();
+            grid.rotateClockwise();
         }
         assert mergeResult != null;
-
-        grid = tempGrid;
         grid.fixCoordinates();
+
+        for (Tile newTileFromMerge : mergeResult.newTilesFromMerge) {
+            for (Tile goneTile : newTileFromMerge.mergedFrom) {
+                goneTile.spot = newTileFromMerge.spot;
+            }
+        }
+
 
         if (mergeResult.didChange) {
 
