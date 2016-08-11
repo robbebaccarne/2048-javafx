@@ -4,6 +4,9 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 class Config {
+
+    static final boolean QUICK_MODE = true;
+
     static final int GRID_SIZE = 4;
 
     static final Color BACKGROUND_COLOR = Color.web("#BBADA0");
@@ -19,6 +22,7 @@ class Config {
     final static Duration ANIMATION_DURATION_SECOND_PART = Duration.millis(125);
     final static Duration ANIMATION_PAUSE_BEFORE_SECOND_PART = ANIMATION_DURATION_FIRST_PART.multiply(0.85);
     final static double ANIMATION_MOVE_EASING = 0.9;
+    final static String GLOW_COLOR = "#f3d774";
 
     static class TileDesign {
         static final private TileDesign unknown = new TileDesign(Color.web("#3c3a32"), Color.web("#f9f6f2"), null, null, 5);
@@ -29,11 +33,11 @@ class Config {
                 new TileDesign(Color.web("#f59563"), Color.web("#f9f6f2"), null, null, 2),
                 new TileDesign(Color.web("#f67c5f"), Color.web("#f9f6f2"), null, null, 2),
                 new TileDesign(Color.web("#f65e3b"), Color.web("#f9f6f2"), null, null, 2),
-                new TileDesign(Color.web("#edcf72"), Color.web("#f9f6f2"), 0.23810, 0.14286, 2.5),
-                new TileDesign(Color.web("#edcc61"), Color.web("#f9f6f2"), 0.31746, 0.19048, 2.5),
-                new TileDesign(Color.web("#edc850"), Color.web("#f9f6f2"), 0.39683, 0.23810, 2.5),
-                new TileDesign(Color.web("#edc53f"), Color.web("#f9f6f2"), 0.47619, 0.28571, 3),
-                new TileDesign(Color.web("#edc22e"), Color.web("#f9f6f2"), 0.55556, 0.33333, 3),
+                new TileDesign(Color.web("#edcf72"), Color.web("#f9f6f2"), 0.3, 0.1, 2.5),
+                new TileDesign(Color.web("#edcc61"), Color.web("#f9f6f2"), 0.4, 0.2, 2.5),
+                new TileDesign(Color.web("#edc850"), Color.web("#f9f6f2"), 0.5, 0.3, 2.5),
+                new TileDesign(Color.web("#edc53f"), Color.web("#f9f6f2"), 0.6, 0.4, 3),
+                new TileDesign(Color.web("#edc22e"), Color.web("#f9f6f2"), 0.7, 0.5, 3),
         };
 
         final Color backColor;

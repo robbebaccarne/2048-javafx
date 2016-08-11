@@ -103,7 +103,21 @@ class Grid {
         assert spot != null;
 
         int value = randomizer.nextDouble() < 0.9 ? 0 : 1;
-        value = 7;
+
+        if (Config.QUICK_MODE) {
+            for (int y = 0; y < Config.GRID_SIZE; y++) {
+                for (int x = 0; x < Config.GRID_SIZE; x++) {
+                    final Tile tile = tiles[y][x];
+                    if (tile == null)
+                        continue;
+
+                    int maybe = tile.value;
+                    if (maybe > value)
+                        value = maybe;
+                }
+            }
+        }
+
         final Tile tile = new Tile(value, spot);
         tiles[spot.y][spot.x] = tile;
         return tile;

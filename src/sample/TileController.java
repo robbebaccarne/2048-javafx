@@ -34,16 +34,17 @@ class TileController {
 
         if (design.outerGlow != null) {
             final DropShadow outerGlow = new DropShadow();
-            outerGlow.setColor(Color.web("#f3d774", design.outerGlow));
+            outerGlow.setColor(Color.web(Config.GLOW_COLOR, 0.3));
             outerGlow.setOffsetX(0);
             outerGlow.setOffsetY(0);
-            outerGlow.setRadius(Config.TILE_PIXEL_LENGTH);
+            outerGlow.setSpread(design.outerGlow);
+            outerGlow.setRadius(30);
 
             final InnerShadow innerGlow = new InnerShadow();
             innerGlow.setColor(Color.web("#fff", design.innerGlow));
             innerGlow.setOffsetX(0);
             innerGlow.setOffsetY(0);
-            innerGlow.setRadius(3);
+            innerGlow.setRadius(5);
 
             innerGlow.setInput(outerGlow);
             rectangle.setEffect(innerGlow);
