@@ -41,6 +41,7 @@ class Game {
         moveResult.newTilesFromMerge = mergeResult.newTilesFromMerge;
         moveResult.newTile = grid.addRandomTile();
         moveResult.isGameOver = false;
+        moveResult.didChange = true;
 
 //        final Tile tile = initialTiles.get(0);
 //        tile.spot = new Grid.Coordinate(tile.spot.x, tile.spot.y + 1);

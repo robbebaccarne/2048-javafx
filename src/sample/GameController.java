@@ -24,7 +24,7 @@ class GameController {
     private final Pane board = new Pane();
 
     private ArrayDeque<Game.Move> queuedMoves = new ArrayDeque<>();
-    private boolean isAnimating;
+    private boolean isAnimating = false;
 
     GameController(Stage primaryStage, Game game) {
         this.primaryStage = primaryStage;
