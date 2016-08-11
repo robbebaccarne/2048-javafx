@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 class GameController {
-    private final HashMap<Tile, TileController> visibleTileViews = new HashMap<>();
+    private final HashMap<Tile, TileView> visibleTileViews = new HashMap<>();
     private final Pane board = new Pane();
     private Stage primaryStage;
     private Game game;
@@ -28,11 +28,11 @@ class GameController {
         ArrayList<Transition> creationTransitions = new ArrayList<>();
 
         for (Tile tile : initialTiles) {
-            final TileController tileController = new TileController(tile);
-            board.getChildren().add(tileController.pane);
-            visibleTileViews.put(tile, tileController);
+            final TileView tileView = new TileView(tile);
+            board.getChildren().add(tileView.pane);
+            visibleTileViews.put(tile, tileView);
 
-            final Transition transition = tileController.creationTransition();
+            final Transition transition = tileView.creationTransition();
             creationTransitions.add(transition);
         }
 
@@ -53,25 +53,25 @@ class GameController {
         } else if (moveResult.didChange) {
             ArrayList<Transition> moveTransitions = new ArrayList<>();
             for (Tile movedTile : visibleTileViews.keySet()) {
-                final TileController tileController = visibleTileViews.get(movedTile);
-                Transition moveTransition = tileController.moveTransition();
+                final TileView tileView = visibleTileViews.get(movedTile);
+                Transition moveTransition = tileView.moveTransition();
                 moveTransitions.add(moveTransition);
             }
             ParallelTransition parallelMoveTransition = new ParallelTransition(moveTransitions.toArray(new Animation[0]));
 
             ArrayList<Transition> popUpTransitions = new ArrayList<>();
 
-            TileController newTileController = new TileController(moveResult.newTile);
-            board.getChildren().add(newTileController.pane);
-            visibleTileViews.put(moveResult.newTile, newTileController);
-            Transition creationTransition = newTileController.creationTransition();
+            TileView newTileView = new TileView(moveResult.newTile);
+            board.getChildren().add(newTileView.pane);
+            visibleTileViews.put(moveResult.newTile, newTileView);
+            Transition creationTransition = newTileView.creationTransition();
             popUpTransitions.add(creationTransition);
 
             for (Tile createdTile : moveResult.newTilesFromMerge.keySet()) {
-                final TileController tileController = new TileController(createdTile);
-                board.getChildren().add(tileController.pane);
-                visibleTileViews.put(createdTile, tileController);
-                Transition mergeTransition = tileController.mergeTransition();
+                final TileView tileView = new TileView(createdTile);
+                board.getChildren().add(tileView.pane);
+                visibleTileViews.put(createdTile, tileView);
+                Transition mergeTransition = tileView.mergeTransition();
                 popUpTransitions.add(mergeTransition);
             }
             ParallelTransition parallelPopUpTransition = new ParallelTransition(popUpTransitions.toArray(new Animation[0]));
@@ -83,8 +83,8 @@ class GameController {
             activeTransition.setOnFinished((actionEvent) -> {
                 for (Tile createdTile : moveResult.newTilesFromMerge.keySet()) {
                     for (Tile goneTile : moveResult.newTilesFromMerge.get(createdTile)) {
-                        final TileController tileController = visibleTileViews.get(goneTile);
-                        board.getChildren().remove(tileController.pane);
+                        final TileView tileView = visibleTileViews.get(goneTile);
+                        board.getChildren().remove(tileView.pane);
                         visibleTileViews.remove(goneTile);
                     }
                 }
@@ -131,7 +131,7 @@ class GameController {
                 r.setArcWidth(Config.TILE_PIXEL_RADIUS);
                 r.setArcHeight(Config.TILE_PIXEL_RADIUS);
                 r.setFill(Config.EMPTY_TILE_COLOR);
-                Point point = TileController.getPixelPoint(new Grid.Coordinate(x, y));
+                Point point = TileView.getPixelPoint(new Grid.Coordinate(x, y));
                 r.setTranslateX(point.x);
                 r.setTranslateY(point.y);
                 backgroundPane.getChildren().add(r);
