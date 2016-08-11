@@ -45,20 +45,42 @@ class Grid {
 
             for (int x = 0; x < Config.GRID_SIZE; x++) {
                 Tile currentTile = tiles[y][x];
-                if (lastUnmergedTile == null || currentTile == null || currentTile.value != lastUnmergedTile.value) {
-                    newRow.add(lastUnmergedTile);
+
+                // on first iteration, lastUnmergedTile will be null
+                if (lastUnmergedTile == null) {
+
+                    // either this is the first iteration, or we just merged.
                     lastUnmergedTile = currentTile;
+                    continue;
+
+                } else if (currentTile == null) {
+
+                    // we have an unmerged tile, but this is an empty space, so continue.
+                    continue;
+
                 } else {
-                    // we have a merge! deal with it.
-                    mergeResult.mergedTiles.add(lastUnmergedTile);
-                    mergeResult.mergedTiles.add(currentTile);
 
-                    Tile newTile = new Tile(currentTile.value + 1);
-                    newRow.add(newTile);
-                    mergeResult.newTilesFromMerge.add(newTile);
+                    // we have an unmerged tile, and we have a current tile!
 
-                    // afterwards, reset lastUnmergedTile to null so the next iteration of this loop can start fresh:
-                    lastUnmergedTile = null;
+                    if (currentTile.value == lastUnmergedTile.value) {
+                        // they're the same! time to merge! GO GO GO GO GO!!!
+
+                        // we have a merge! deal with it.
+                        mergeResult.mergedTiles.add(lastUnmergedTile);
+                        mergeResult.mergedTiles.add(currentTile);
+
+                        Tile newTile = new Tile(currentTile.value + 1);
+                        newRow.add(newTile);
+                        mergeResult.newTilesFromMerge.add(newTile);
+
+                        // afterwards, reset lastUnmergedTile to null so the next iteration of this loop can start fresh:
+                        lastUnmergedTile = null;
+                    } else {
+                        // hmm, they're not the same. okay, skip this one.
+                        newRow.add(lastUnmergedTile);
+                        lastUnmergedTile = currentTile;
+                        continue;
+                    }
                 }
             }
 

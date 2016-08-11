@@ -27,11 +27,11 @@ class Game {
             }
             tempGrid = tempGrid.rotatedGridClockwise();
         }
+        assert mergeResult != null;
 
         grid = tempGrid;
         grid.fixCoordinates();
 
-        assert mergeResult != null;
         if (mergeResult.didChange) {
 
         } else {
