@@ -10,7 +10,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 import java.awt.*;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -19,8 +18,7 @@ class GameController {
     private final Pane board = new Pane();
     private Stage primaryStage;
     private Game game;
-    private ArrayDeque<Game.Move> queuedMoves = new ArrayDeque<>();
-    private boolean isAnimating = false;
+    private ParallelTransition activeTransition;
 
     GameController(Stage primaryStage, Game game) {
         this.primaryStage = primaryStage;
@@ -42,17 +40,13 @@ class GameController {
         creationTransition.play();
     }
 
-    private void queueMove(Game.Move move) {
-        queuedMoves.add(move);
-        runNextMove();
-    }
+    private void runMove(Game.Move move) {
+        if (activeTransition != null) {
+            activeTransition.jumpTo("end");
+            activeTransition = null;
+        }
 
-    private void runNextMove() {
-        if (queuedMoves.isEmpty() || isAnimating)
-            return;
-
-        final Game.Move nextMove = queuedMoves.pop();
-        final Game.MoveResult moveResult = game.runMove(nextMove);
+        final Game.MoveResult moveResult = game.runMove(move);
 
         if (moveResult.isGameOver) {
             System.out.println("Game over!");
@@ -84,10 +78,9 @@ class GameController {
             PauseTransition waitBeforePoppingUpTransition = new PauseTransition(Config.ANIMATION_PAUSE_BEFORE_SECOND_PART);
             SequentialTransition overallPopUpTransition = new SequentialTransition(waitBeforePoppingUpTransition, parallelPopUpTransition);
 
-            ParallelTransition allTransitions = new ParallelTransition(parallelMoveTransition, overallPopUpTransition);
+            activeTransition = new ParallelTransition(parallelMoveTransition, overallPopUpTransition);
 
-            isAnimating = true;
-            allTransitions.setOnFinished((actionEvent) -> {
+            activeTransition.setOnFinished((actionEvent) -> {
                 for (Tile createdTile : moveResult.newTilesFromMerge.keySet()) {
                     for (Tile goneTile : moveResult.newTilesFromMerge.get(createdTile)) {
                         final TileController tileController = visibleTileViews.get(goneTile);
@@ -96,11 +89,10 @@ class GameController {
                     }
                 }
 
-                isAnimating = false;
-                runNextMove();
+                activeTransition = null;
             });
 
-            allTransitions.play();
+            activeTransition.play();
         }
     }
 
@@ -115,16 +107,16 @@ class GameController {
         primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, (keyEvent) -> {
             switch (keyEvent.getCode()) {
                 case UP:
-                    queueMove(Game.Move.Up);
+                    runMove(Game.Move.Up);
                     break;
                 case DOWN:
-                    queueMove(Game.Move.Down);
+                    runMove(Game.Move.Down);
                     break;
                 case LEFT:
-                    queueMove(Game.Move.Left);
+                    runMove(Game.Move.Left);
                     break;
                 case RIGHT:
-                    queueMove(Game.Move.Right);
+                    runMove(Game.Move.Right);
                     break;
             }
         });
