@@ -51,10 +51,10 @@ class Config {
         }
 
         static TileDesign forValue(int i) {
-            if (i > tileDesigns.length)
-                return unknown;
-            else
+            if (i < tileDesigns.length)
                 return tileDesigns[i];
+            else
+                return unknown;
         }
     }
 }
