@@ -37,7 +37,6 @@ class Game {
 
         moveResult.newTilesFromMerge = null;
         moveResult.newTile = null;
-        moveResult.movedTiles = null;
         moveResult.isGameOver = false;
 
 //        final Tile tile = initialTiles.get(0);
@@ -65,7 +64,6 @@ class Game {
         boolean didChange = false;
         boolean isGameOver = false;
         Tile newTile;
-        ArrayList<Tile> movedTiles = new ArrayList<>();
         ArrayList<Tile> newTilesFromMerge = new ArrayList<>();
     }
 

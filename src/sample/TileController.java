@@ -15,7 +15,7 @@ import java.awt.*;
 class TileController {
 
     Pane pane;
-    private Tile tile;
+    Tile tile;
 
     TileController(Tile tile) {
         this.tile = tile;
