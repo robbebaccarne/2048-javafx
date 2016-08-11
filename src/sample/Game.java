@@ -1,6 +1,7 @@
 package sample;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 class Game {
 
@@ -24,31 +25,22 @@ class Game {
             grid.rotateClockwise();
         }
         assert mergeResult != null;
-        grid.fixCoordinates();
+        grid.reassignCoordinates();
 
-        for (Tile newTileFromMerge : mergeResult.newTilesFromMerge) {
-            for (Tile goneTile : newTileFromMerge.mergedFrom) {
+
+        for (Tile newTileFromMerge : mergeResult.newTilesFromMerge.keySet()) {
+            for (Tile goneTile : mergeResult.newTilesFromMerge.get(newTileFromMerge)) {
                 goneTile.spot = newTileFromMerge.spot;
             }
         }
 
+        moveResult.didChange = mergeResult.didChange;
+        moveResult.newTilesFromMerge = mergeResult.newTilesFromMerge;
+        moveResult.isGameOver = false;
 
         if (mergeResult.didChange) {
-
-        } else {
-
+            moveResult.newTile = grid.addRandomTile();
         }
-
-        moveResult.newTilesFromMerge = mergeResult.newTilesFromMerge;
-        moveResult.goneTilesFromMerge = mergeResult.mergedTiles;
-        moveResult.newTile = grid.addRandomTile();
-        moveResult.isGameOver = false;
-        moveResult.didChange = true;
-
-//        final Tile tile = initialTiles.get(0);
-//        tile.spot = new Grid.Coordinate(tile.spot.x, tile.spot.y + 1);
-//
-//        result.movedTiles = initialTiles;
 
         return moveResult;
     }
@@ -70,8 +62,7 @@ class Game {
         boolean didChange = false;
         boolean isGameOver = false;
         Tile newTile;
-        ArrayList<Tile> newTilesFromMerge = new ArrayList<>();
-        ArrayList<Tile> goneTilesFromMerge = new ArrayList<>();
+        HashMap<Tile, ArrayList<Tile>> newTilesFromMerge = new HashMap<>();
     }
 
 }

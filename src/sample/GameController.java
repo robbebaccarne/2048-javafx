@@ -48,7 +48,6 @@ class GameController {
 
     private void queueMove(Game.Move move) {
         queuedMoves.add(move);
-        System.out.println("welp: " + queuedMoves);
         runNextMove();
     }
 
@@ -78,7 +77,7 @@ class GameController {
             Transition creationTransition = newTileController.creationTransition();
             popUpTransitions.add(creationTransition);
 
-            for (Tile createdTile : moveResult.newTilesFromMerge) {
+            for (Tile createdTile : moveResult.newTilesFromMerge.keySet()) {
                 final TileController tileController = new TileController(createdTile);
                 board.getChildren().add(tileController.pane);
                 visibleTileViews.put(createdTile, tileController);
@@ -91,10 +90,12 @@ class GameController {
 
             isAnimating = true;
             allTransitions.setOnFinished((actionEvent) -> {
-                for (Tile goneTile : moveResult.goneTilesFromMerge) {
-                    final TileController tileController = visibleTileViews.get(goneTile);
-                    board.getChildren().remove(tileController.pane);
-                    visibleTileViews.remove(goneTile);
+                for (Tile createdTile : moveResult.newTilesFromMerge.keySet()) {
+                    for (Tile goneTile : moveResult.newTilesFromMerge.get(createdTile)) {
+                        final TileController tileController = visibleTileViews.get(goneTile);
+                        board.getChildren().remove(tileController.pane);
+                        visibleTileViews.remove(goneTile);
+                    }
                 }
 
                 isAnimating = false;

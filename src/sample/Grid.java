@@ -1,6 +1,7 @@
 package sample;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 class Grid {
@@ -8,7 +9,7 @@ class Grid {
     private final Random randomizer = new Random();
     private Tile[][] tiles = new Tile[Config.GRID_SIZE][Config.GRID_SIZE];
 
-    void fixCoordinates() {
+    void reassignCoordinates() {
         for (int y = 0; y < Config.GRID_SIZE; y++) {
             for (int x = 0; x < Config.GRID_SIZE; x++) {
                 final Tile tile = tiles[y][x];
@@ -40,11 +41,11 @@ class Grid {
             for (int x = 0; x < Config.GRID_SIZE; x++) {
                 Tile currentTile = tiles[y][x];
 
-                if (currentTile == null) {
-
+                if (currentTile == null)
                     // this is an empty space, so just skip it.
+                    continue;
 
-                } else if (lastUnmergedTile == null) {
+                if (lastUnmergedTile == null) {
 
                     // we're on a valid tile, but we dont have a mergeable tile behind us.
                     lastUnmergedTile = currentTile;
@@ -58,15 +59,14 @@ class Grid {
                 } else {
 
                     // we have a match we can merge! GO GO GO GO GO!!!
-                    mergeResult.mergedTiles.add(lastUnmergedTile);
-                    mergeResult.mergedTiles.add(currentTile);
-
                     Tile newTile = new Tile(currentTile.value + 1);
                     newRow.add(newTile);
-                    mergeResult.newTilesFromMerge.add(newTile);
 
-                    newTile.mergedFrom.add(lastUnmergedTile);
-                    newTile.mergedFrom.add(currentTile);
+                    ArrayList<Tile> mergedTiles = new ArrayList<Tile>();
+                    mergedTiles.add(lastUnmergedTile);
+                    mergedTiles.add(currentTile);
+
+                    mergeResult.newTilesFromMerge.put(newTile, mergedTiles);
 
                     // afterwards, reset lastUnmergedTile to null so the next iteration of this loop can start fresh:
                     lastUnmergedTile = null;
@@ -82,10 +82,18 @@ class Grid {
                 newRow.add(null);
             }
 
+            for (int i = 0; i < Config.GRID_SIZE; i++) {
+                Tile a = newRow.get(i);
+                Tile b = tiles[y][i];
+
+                if (a != b) {
+                    mergeResult.didChange = true;
+                    break;
+                }
+            }
+
             tiles[y] = newRow.toArray(new Tile[0]);
         }
-
-        mergeResult.didChange = true;
 
         return mergeResult;
     }
@@ -132,8 +140,7 @@ class Grid {
 
     class MergeResult {
         boolean didChange;
-        ArrayList<Tile> mergedTiles = new ArrayList<>();
-        ArrayList<Tile> newTilesFromMerge = new ArrayList<>();
+        HashMap<Tile, ArrayList<Tile>> newTilesFromMerge = new HashMap<>();
     }
 
 }

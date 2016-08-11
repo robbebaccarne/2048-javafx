@@ -15,8 +15,8 @@ class Config {
 
     static final int BOARD_PIXEL_LENGTH = (PIXEL_LENGTH * GRID_SIZE) + ((GRID_SIZE + 1) * PIXEL_PADDING);
 
-    final static Duration ANIMATION_DURATION_FIRST_PART = Duration.millis(100);
-    final static Duration ANIMATION_DURATION_SECOND_PART = Duration.millis(100);
+    final static Duration ANIMATION_DURATION_FIRST_PART = Duration.millis(200);
+    final static Duration ANIMATION_DURATION_SECOND_PART = Duration.millis(200);
 
     static class TileDesign {
         static final private TileDesign unknown = new TileDesign(Color.web("#3c3a32"), Color.web("#f9f6f2"), 5);
