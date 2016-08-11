@@ -6,18 +6,21 @@ import java.util.Random;
 class Grid {
 
     private final Random randomizer = new Random();
+    private Tile[][] tiles = new Tile[Config.GRID_SIZE][Config.GRID_SIZE];
 
-    static class Coordinate {
-        final int x;
-        final int y;
-
-        Coordinate(int x, int y) {
-            this.x = x;
-            this.y = y;
+    Grid rotatedGridClockwise() {
+        Grid newGrid = new Grid();
+        for (int x = 0; x < Config.GRID_SIZE; x++) {
+            for (int y = 0; y < Config.GRID_SIZE; y++) {
+                newGrid.tiles[x][y] = this.tiles[y][Config.GRID_SIZE - x - 1];
+            }
         }
+        return newGrid;
     }
 
-    private Tile[][] tiles = new Tile[Config.GRID_SIZE][Config.GRID_SIZE];
+    void mergeLeft() {
+
+    }
 
     Tile addTile() {
         Coordinate spot = findOpenSpot();
@@ -47,6 +50,16 @@ class Grid {
             }
         }
         return spots;
+    }
+
+    static class Coordinate {
+        final int x;
+        final int y;
+
+        Coordinate(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
     }
 
 }

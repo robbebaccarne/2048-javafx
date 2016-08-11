@@ -1,5 +1,6 @@
 package sample;
 
+import javafx.animation.Transition;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
@@ -47,11 +48,16 @@ class GameView {
         final Game.Move nextMove = queuedMoves.pop();
         final Game.MoveResult result = game.runMove(nextMove);
 
-        for (Tile movedTile : result.movedTiles) {
-            final TileView tileView = visibleTileViews.get(movedTile);
-            tileView
+        if (result.isGameOver) {
+            System.out.println("Game over!");
         }
-
+        else {
+            for (Tile movedTile : result.movedTiles) {
+                final TileView tileView = visibleTileViews.get(movedTile);
+                Transition t = tileView.makeTransition();
+                t.play();
+            }
+        }
     }
 
     void setup() {

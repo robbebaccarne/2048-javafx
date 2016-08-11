@@ -7,29 +7,50 @@ class Game {
     private Grid grid = new Grid();
 
     ArrayList<Tile> startGame() {
-        final ArrayList<Tile> initialTiles = new ArrayList<>();
+        ArrayList<Tile> initialTiles = new ArrayList<>();
         initialTiles.add(grid.addTile());
         initialTiles.add(grid.addTile());
         return initialTiles;
     }
 
     MoveResult runMove(Move move) {
-        return null;
+        MoveResult result = new MoveResult();
+
+        int rotations = move.rotations;
+
+        Grid tempGrid = grid;
+        for (int i = 0; i < 4; i++) {
+            if (i == rotations) {
+                tempGrid.mergeLeft();
+            }
+            tempGrid = tempGrid.rotatedGridClockwise();
+        }
+
+//        final Tile tile = initialTiles.get(0);
+//        tile.spot = new Grid.Coordinate(tile.spot.x, tile.spot.y + 1);
+//
+//        result.movedTiles = initialTiles;
+
+        return result;
     }
 
     enum Move {
-        Up, Down, Left, Right
+        Left(0),
+        Down(1),
+        Right(2),
+        Up(3);
+
+        private int rotations;
+
+        Move(int rotations) {
+            this.rotations = rotations;
+        }
     }
 
     class MoveResult {
+        boolean isGameOver = false;
         Tile newTile;
-        ArrayList<Tile> movedTiles;
-        ArrayList<Tile> newTilesFromMerge;
-
-        MoveResult(Tile newTile, ArrayList<Tile> movedTiles, ArrayList<Tile> newTilesFromMerge) {
-            this.newTile = newTile;
-            this.movedTiles = movedTiles;
-            this.newTilesFromMerge = newTilesFromMerge;
-        }
+        ArrayList<Tile> movedTiles = new ArrayList<>();
+        ArrayList<Tile> newTilesFromMerge = new ArrayList<>();
     }
 }
