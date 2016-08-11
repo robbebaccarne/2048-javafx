@@ -13,8 +13,8 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         final Game game = new Game();
-        final GameView gameView = new GameView(primaryStage, game);
-        gameView.setup();
+        final GameController gameController = new GameController(primaryStage, game);
+        gameController.setup();
 
 
 //        Group root = new Group();

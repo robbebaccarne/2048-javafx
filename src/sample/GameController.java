@@ -14,24 +14,24 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-class GameView {
-    private final HashMap<Tile, TileView> visibleTileViews = new HashMap<>();
+class GameController {
+    private final HashMap<Tile, TileController> visibleTileViews = new HashMap<>();
     private Stage primaryStage;
     private Game game;
     private final Pane board = new Pane();
 
     private ArrayDeque<Game.Move> queuedMoves = new ArrayDeque<>();
 
-    GameView(Stage primaryStage, Game game) {
+    GameController(Stage primaryStage, Game game) {
         this.primaryStage = primaryStage;
         this.game = game;
 
         final ArrayList<Tile> initialTiles = game.startGame();
 
         for (Tile tile : initialTiles) {
-            final TileView tileView = new TileView(tile);
-            board.getChildren().add(tileView.pane);
-            visibleTileViews.put(tile, tileView);
+            final TileController tileController = new TileController(tile);
+            board.getChildren().add(tileController.pane);
+            visibleTileViews.put(tile, tileController);
         }
     }
 
@@ -53,8 +53,8 @@ class GameView {
         }
         else {
             for (Tile movedTile : result.movedTiles) {
-                final TileView tileView = visibleTileViews.get(movedTile);
-                Transition t = tileView.makeTransition();
+                final TileController tileController = visibleTileViews.get(movedTile);
+                Transition t = tileController.makeTransition();
                 t.play();
             }
         }
@@ -95,7 +95,7 @@ class GameView {
                 r.setArcWidth(Config.TILE_RADIUS);
                 r.setArcHeight(Config.TILE_RADIUS);
                 r.setFill(Config.EMPTY_TILE_COLOR);
-                Point point = TileView.getPixelPoint(new Grid.Coordinate(x, y));
+                Point point = TileController.getPixelPoint(new Grid.Coordinate(x, y));
                 r.setTranslateX(point.x);
                 r.setTranslateY(point.y);
                 backgroundPane.getChildren().add(r);

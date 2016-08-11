@@ -13,12 +13,12 @@ import javafx.util.Duration;
 
 import java.awt.*;
 
-class TileView {
+class TileController {
 
     Pane pane;
     private Tile tile;
 
-    TileView(Tile tile) {
+    TileController(Tile tile) {
         this.tile = tile;
         final Config.TileDesign design = Config.TileDesign.forValue(tile.value);
 
