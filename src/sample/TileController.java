@@ -45,12 +45,9 @@ class TileController {
 
     Transition moveTransition() {
         TranslateTransition tt = new TranslateTransition(Config.ANIMATION_DURATION_FIRST_PART, pane);
-
         Point p = getPixelPoint(tile.spot);
-
         tt.setToX(p.x);
         tt.setToY(p.y);
-//        tt.setCycleCount(1);
         return tt;
     }
 

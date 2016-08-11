@@ -18,7 +18,7 @@ class Game {
 
         int rotations = move.rotations;
 
-        Grid.MergeResult mergeResult;
+        Grid.MergeResult mergeResult = null;
 
         Grid tempGrid = grid;
         for (int i = 0; i < 4; i++) {
@@ -28,6 +28,16 @@ class Game {
             tempGrid = tempGrid.rotatedGridClockwise();
         }
 
+        assert mergeResult != null;
+        if (mergeResult.didChange) {
+
+        } else {
+
+        }
+
+        moveResult.newTilesFromMerge = null;
+        moveResult.newTile = null;
+        moveResult.movedTiles = null;
         moveResult.isGameOver = false;
 
 //        final Tile tile = initialTiles.get(0);
@@ -52,6 +62,7 @@ class Game {
     }
 
     class MoveResult {
+        boolean didChange = false;
         boolean isGameOver = false;
         Tile newTile;
         ArrayList<Tile> movedTiles = new ArrayList<>();

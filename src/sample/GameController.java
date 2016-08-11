@@ -54,7 +54,7 @@ class GameController {
 
         if (moveResult.isGameOver) {
             System.out.println("Game over!");
-        } else {
+        } else if (moveResult.didChange) {
             ArrayList<Transition> moveTransitions = new ArrayList<>();
             for (Tile movedTile : moveResult.movedTiles) {
                 final TileController tileController = visibleTileViews.get(movedTile);

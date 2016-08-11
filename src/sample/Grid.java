@@ -9,20 +9,58 @@ class Grid {
     private Tile[][] tiles = new Tile[Config.GRID_SIZE][Config.GRID_SIZE];
 
     class MergeResult {
+        boolean didChange;
+        private ArrayList<Tile> mergedTiles = new ArrayList<>();
+        private ArrayList<Tile> newTilesFromMerge = new ArrayList<>();
     }
 
     Grid rotatedGridClockwise() {
         Grid newGrid = new Grid();
-        for (int x = 0; x < Config.GRID_SIZE; x++) {
-            for (int y = 0; y < Config.GRID_SIZE; y++) {
-                newGrid.tiles[x][y] = this.tiles[y][Config.GRID_SIZE - x - 1];
+        for (int y = 0; y < Config.GRID_SIZE; y++) {
+            for (int x = 0; x < Config.GRID_SIZE; x++) {
+                newGrid.tiles[y][x] = this.tiles[x][Config.GRID_SIZE - y - 1];
             }
         }
         return newGrid;
     }
 
     MergeResult mergeLeft() {
-        return null;
+        MergeResult mergeResult = new MergeResult();
+
+        for (int y = 0; y < Config.GRID_SIZE; y++) {
+            Tile lastUnmergedTile = null;
+
+            ArrayList<Tile> newRow = new ArrayList<>();
+
+            for (int x = 0; x < Config.GRID_SIZE; x++) {
+                Tile currentTile = tiles[y][x];
+                if (lastUnmergedTile == null || currentTile.value != lastUnmergedTile.value) {
+                    newRow.add(lastUnmergedTile);
+                    lastUnmergedTile = currentTile;
+                } else {
+                    // we have a merge! deal with it.
+                    mergeResult.mergedTiles.add(lastUnmergedTile);
+                    mergeResult.mergedTiles.add(currentTile);
+
+                    Tile newTile = new Tile(currentTile.value + 1);
+                    newRow.add(newTile);
+                    mergeResult.newTilesFromMerge.add(newTile);
+
+                    // afterwards, reset lastUnmergedTile to null so the next iteration of this loop can start fresh:
+                    lastUnmergedTile = null;
+                }
+            }
+
+            for (int i = 0; i < Config.GRID_SIZE - newRow.size(); i++) {
+                newRow.add(null);
+            }
+
+            tiles[y] = (Tile[]) newRow.toArray();
+        }
+
+        mergeResult.didChange = true;
+
+        return mergeResult;
     }
 
     Tile addTile() {
@@ -31,7 +69,7 @@ class Grid {
 
         int value = randomizer.nextDouble() < 0.9 ? 0 : 1;
         final Tile tile = new Tile(value, spot);
-        tiles[spot.x][spot.y] = tile;
+        tiles[spot.y][spot.x] = tile;
         return tile;
     }
 
@@ -46,9 +84,9 @@ class Grid {
 
     private ArrayList<Coordinate> openSpots() {
         ArrayList<Coordinate> spots = new ArrayList<Coordinate>();
-        for (int x = 0; x < Config.GRID_SIZE; x++) {
-            for (int y = 0; y < Config.GRID_SIZE; y++) {
-                if (tiles[x][y] == null)
+        for (int y = 0; y < Config.GRID_SIZE; y++) {
+            for (int x = 0; x < Config.GRID_SIZE; x++) {
+                if (tiles[y][x] == null)
                     spots.add(new Coordinate(x, y));
             }
         }
