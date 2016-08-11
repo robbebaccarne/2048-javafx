@@ -103,6 +103,7 @@ class Grid {
         assert spot != null;
 
         int value = randomizer.nextDouble() < 0.9 ? 0 : 1;
+        value = 7;
         final Tile tile = new Tile(value, spot);
         tiles[spot.y][spot.x] = tile;
         return tile;

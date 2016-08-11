@@ -127,9 +127,9 @@ class GameController {
         Pane backgroundPane = new GridPane();
         for (int y = 0; y < Config.GRID_SIZE; y++) {
             for (int x = 0; x < Config.GRID_SIZE; x++) {
-                Rectangle r = new Rectangle(Config.PIXEL_LENGTH, Config.PIXEL_LENGTH);
-                r.setArcWidth(Config.TILE_RADIUS);
-                r.setArcHeight(Config.TILE_RADIUS);
+                Rectangle r = new Rectangle(Config.TILE_PIXEL_LENGTH, Config.TILE_PIXEL_LENGTH);
+                r.setArcWidth(Config.TILE_PIXEL_RADIUS);
+                r.setArcHeight(Config.TILE_PIXEL_RADIUS);
                 r.setFill(Config.EMPTY_TILE_COLOR);
                 Point point = TileController.getPixelPoint(new Grid.Coordinate(x, y));
                 r.setTranslateX(point.x);

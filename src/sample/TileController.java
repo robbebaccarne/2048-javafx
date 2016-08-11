@@ -1,6 +1,8 @@
 package sample;
 
 import javafx.animation.*;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.InnerShadow;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -20,15 +22,32 @@ class TileController {
         this.tile = tile;
         final Config.TileDesign design = Config.TileDesign.forValue(tile.value);
 
-        Rectangle rectangle = new Rectangle(Config.PIXEL_LENGTH, Config.PIXEL_LENGTH);
-        rectangle.setArcWidth(Config.TILE_RADIUS);
-        rectangle.setArcHeight(Config.TILE_RADIUS);
+        Rectangle rectangle = new Rectangle(Config.TILE_PIXEL_LENGTH, Config.TILE_PIXEL_LENGTH);
+        rectangle.setArcWidth(Config.TILE_PIXEL_RADIUS);
+        rectangle.setArcHeight(Config.TILE_PIXEL_RADIUS);
         rectangle.setFill(design.backColor);
 
         Text text = new Text(String.valueOf(2 << tile.value));
-        text.setFont(Font.font(text.getFont().getName(), FontWeight.BOLD, Config.PIXEL_LENGTH / design.sizeFraction));
+        text.setFont(Font.font(text.getFont().getName(), FontWeight.BOLD, Config.TILE_PIXEL_LENGTH / design.sizeFraction));
         text.setFill(design.foreColor);
         text.setStroke(Color.TRANSPARENT);
+
+        if (design.outerGlow != null) {
+            final DropShadow outerGlow = new DropShadow();
+            outerGlow.setColor(Color.web("#f3d774", design.outerGlow));
+            outerGlow.setOffsetX(0);
+            outerGlow.setOffsetY(0);
+            outerGlow.setRadius(Config.TILE_PIXEL_LENGTH);
+
+            final InnerShadow innerGlow = new InnerShadow();
+            innerGlow.setColor(Color.web("#fff", design.innerGlow));
+            innerGlow.setOffsetX(0);
+            innerGlow.setOffsetY(0);
+            innerGlow.setRadius(3);
+
+            innerGlow.setInput(outerGlow);
+            rectangle.setEffect(innerGlow);
+        }
 
         Point p = getPixelPoint(tile.spot);
         pane = new StackPane(rectangle, text);
@@ -38,8 +57,8 @@ class TileController {
     }
 
     static Point getPixelPoint(Grid.Coordinate spot) {
-        int px = (Config.PIXEL_LENGTH * spot.x) + ((spot.x + 1) * Config.PIXEL_PADDING);
-        int py = (Config.PIXEL_LENGTH * spot.y) + ((spot.y + 1) * Config.PIXEL_PADDING);
+        int px = (Config.TILE_PIXEL_LENGTH * spot.x) + ((spot.x + 1) * Config.BOARD_PIXEL_PADDING);
+        int py = (Config.TILE_PIXEL_LENGTH * spot.y) + ((spot.y + 1) * Config.BOARD_PIXEL_PADDING);
         return new Point(px, py);
     }
 

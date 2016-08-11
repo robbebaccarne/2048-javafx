@@ -12,6 +12,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        primaryStage.setTitle("2048");
         final Game game = new Game();
         final GameController gameController = new GameController(primaryStage, game);
         gameController.begin();
