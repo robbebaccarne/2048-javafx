@@ -8,10 +8,20 @@ class Grid {
     private final Random randomizer = new Random();
     private Tile[][] tiles = new Tile[Config.GRID_SIZE][Config.GRID_SIZE];
 
+    void fixCoordinates() {
+        for (int y = 0; y < Config.GRID_SIZE; y++) {
+            for (int x = 0; x < Config.GRID_SIZE; x++) {
+                final Tile tile = tiles[y][x];
+                if (tile != null)
+                    tile.spot = new Coordinate(x, y);
+            }
+        }
+    }
+
     class MergeResult {
         boolean didChange;
-        private ArrayList<Tile> mergedTiles = new ArrayList<>();
-        private ArrayList<Tile> newTilesFromMerge = new ArrayList<>();
+        ArrayList<Tile> mergedTiles = new ArrayList<>();
+        ArrayList<Tile> newTilesFromMerge = new ArrayList<>();
     }
 
     Grid rotatedGridClockwise() {
@@ -34,7 +44,7 @@ class Grid {
 
             for (int x = 0; x < Config.GRID_SIZE; x++) {
                 Tile currentTile = tiles[y][x];
-                if (lastUnmergedTile == null || currentTile.value != lastUnmergedTile.value) {
+                if (lastUnmergedTile == null || currentTile == null || currentTile.value != lastUnmergedTile.value) {
                     newRow.add(lastUnmergedTile);
                     lastUnmergedTile = currentTile;
                 } else {
@@ -55,7 +65,7 @@ class Grid {
                 newRow.add(null);
             }
 
-            tiles[y] = (Tile[]) newRow.toArray();
+            tiles[y] = newRow.toArray(new Tile[0]);
         }
 
         mergeResult.didChange = true;
@@ -63,7 +73,7 @@ class Grid {
         return mergeResult;
     }
 
-    Tile addTile() {
+    Tile addRandomTile() {
         Coordinate spot = findOpenSpot();
         assert spot != null;
 

@@ -8,8 +8,8 @@ class Game {
 
     ArrayList<Tile> startGame() {
         ArrayList<Tile> initialTiles = new ArrayList<>();
-        initialTiles.add(grid.addTile());
-        initialTiles.add(grid.addTile());
+        initialTiles.add(grid.addRandomTile());
+        initialTiles.add(grid.addRandomTile());
         return initialTiles;
     }
 
@@ -28,6 +28,9 @@ class Game {
             tempGrid = tempGrid.rotatedGridClockwise();
         }
 
+        grid = tempGrid;
+        grid.fixCoordinates();
+
         assert mergeResult != null;
         if (mergeResult.didChange) {
 
@@ -35,8 +38,8 @@ class Game {
 
         }
 
-        moveResult.newTilesFromMerge = null;
-        moveResult.newTile = null;
+        moveResult.newTilesFromMerge = mergeResult.newTilesFromMerge;
+        moveResult.newTile = grid.addRandomTile();
         moveResult.isGameOver = false;
 
 //        final Tile tile = initialTiles.get(0);
