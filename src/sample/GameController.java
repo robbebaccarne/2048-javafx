@@ -1,9 +1,6 @@
 package sample;
 
-import javafx.animation.Animation;
-import javafx.animation.ParallelTransition;
-import javafx.animation.SequentialTransition;
-import javafx.animation.Transition;
+import javafx.animation.*;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
@@ -85,8 +82,10 @@ class GameController {
                 popUpTransitions.add(mergeTransition);
             }
             ParallelTransition parallelPopUpTransition = new ParallelTransition(popUpTransitions.toArray(new Animation[0]));
+            PauseTransition waitBeforePoppingUpTransition = new PauseTransition(Config.ANIMATION_PAUSE_BEFORE_SECOND_PART);
+            SequentialTransition overallPopUpTransition = new SequentialTransition(waitBeforePoppingUpTransition, parallelPopUpTransition);
 
-            SequentialTransition allTransitions = new SequentialTransition(parallelMoveTransition, parallelPopUpTransition);
+            ParallelTransition allTransitions = new ParallelTransition(parallelMoveTransition, overallPopUpTransition);
 
             isAnimating = true;
             allTransitions.setOnFinished((actionEvent) -> {

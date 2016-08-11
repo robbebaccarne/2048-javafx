@@ -15,8 +15,9 @@ class Config {
 
     static final int BOARD_PIXEL_LENGTH = (PIXEL_LENGTH * GRID_SIZE) + ((GRID_SIZE + 1) * PIXEL_PADDING);
 
-    final static Duration ANIMATION_DURATION_FIRST_PART = Duration.millis(200);
-    final static Duration ANIMATION_DURATION_SECOND_PART = Duration.millis(200);
+    final static Duration ANIMATION_DURATION_FIRST_PART = Duration.millis(125);
+    final static Duration ANIMATION_DURATION_SECOND_PART = Duration.millis(125);
+    final static Duration ANIMATION_PAUSE_BEFORE_SECOND_PART = ANIMATION_DURATION_FIRST_PART.multiply(0.9);
 
     static class TileDesign {
         static final private TileDesign unknown = new TileDesign(Color.web("#3c3a32"), Color.web("#f9f6f2"), 5);
@@ -27,11 +28,11 @@ class Config {
                 new TileDesign(Color.web("#f59563"), Color.web("#f9f6f2"), 2),
                 new TileDesign(Color.web("#f67c5f"), Color.web("#f9f6f2"), 2),
                 new TileDesign(Color.web("#f65e3b"), Color.web("#f9f6f2"), 2),
-                new TileDesign(Color.web("#edcf72"), Color.web("#f9f6f2"), 2),
-                new TileDesign(Color.web("#edcc61"), Color.web("#f9f6f2"), 2),
-                new TileDesign(Color.web("#edc850"), Color.web("#f9f6f2"), 2),
-                new TileDesign(Color.web("#edc53f"), Color.web("#f9f6f2"), 2),
-                new TileDesign(Color.web("#edc22e"), Color.web("#f9f6f2"), 2),
+                new TileDesign(Color.web("#edcf72"), Color.web("#f9f6f2"), 2.5),
+                new TileDesign(Color.web("#edcc61"), Color.web("#f9f6f2"), 2.5),
+                new TileDesign(Color.web("#edc850"), Color.web("#f9f6f2"), 2.5),
+                new TileDesign(Color.web("#edc53f"), Color.web("#f9f6f2"), 3),
+                new TileDesign(Color.web("#edc22e"), Color.web("#f9f6f2"), 3),
         };
 
         final Color backColor;

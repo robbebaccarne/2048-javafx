@@ -53,16 +53,24 @@ class TileController {
 
     Transition mergeTransition() {
         FadeTransition fadeTransition = new FadeTransition(Config.ANIMATION_DURATION_SECOND_PART, pane);
-        fadeTransition.setFromValue(0);
+        fadeTransition.setFromValue(0.95);
         fadeTransition.setToValue(1);
 
-        ScaleTransition scaleTransition = new ScaleTransition(Config.ANIMATION_DURATION_SECOND_PART, pane);
-        scaleTransition.setFromX(0.2);
-        scaleTransition.setFromY(0.2);
-        scaleTransition.setToX(1);
-        scaleTransition.setToY(1);
+        ScaleTransition scaleTransition1 = new ScaleTransition(Config.ANIMATION_DURATION_SECOND_PART.divide(2), pane);
+        scaleTransition1.setFromX(0.75);
+        scaleTransition1.setFromY(0.75);
+        scaleTransition1.setToX(1.25);
+        scaleTransition1.setToY(1.25);
 
-        return new ParallelTransition(fadeTransition, scaleTransition);
+        ScaleTransition scaleTransition2 = new ScaleTransition(Config.ANIMATION_DURATION_SECOND_PART.divide(2), pane);
+        scaleTransition2.setFromX(1.25);
+        scaleTransition2.setFromY(1.25);
+        scaleTransition2.setToX(1);
+        scaleTransition2.setToY(1);
+
+        SequentialTransition bothScaleTransitions = new SequentialTransition(scaleTransition1, scaleTransition2);
+
+        return new ParallelTransition(fadeTransition, bothScaleTransitions);
     }
 
     Transition creationTransition() {
@@ -71,8 +79,8 @@ class TileController {
         fadeTransition.setToValue(1);
 
         ScaleTransition scaleTransition = new ScaleTransition(Config.ANIMATION_DURATION_SECOND_PART, pane);
-        scaleTransition.setFromX(0.2);
-        scaleTransition.setFromY(0.2);
+        scaleTransition.setFromX(0.1);
+        scaleTransition.setFromY(0.1);
         scaleTransition.setToX(1);
         scaleTransition.setToY(1);
 
