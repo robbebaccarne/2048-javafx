@@ -40,6 +40,7 @@ class GameController {
                 break;
         }
     };
+    private boolean sawEndScreen = false;
 
     GameController(Stage primaryStage, Game game) {
         this.primaryStage = primaryStage;
@@ -100,6 +101,7 @@ class GameController {
         ArrayList<Transition> popUpTransitions = new ArrayList<>();
 
         TileView newTileView = new TileView(moveResult.newTile);
+        System.out.println(moveResult.newTile);
         board.getChildren().add(newTileView.pane);
         visibleTileViews.put(moveResult.newTile, newTileView);
         Transition creationTransition = newTileView.creationTransition();
@@ -129,15 +131,24 @@ class GameController {
 
             activeTransition = null;
 
-            maybeShowGameOver();
+            int highestNewMergeValue = 0;
+            for (Tile createdTile : moveResult.mergeResult.newTilesFromMerge.keySet()) {
+                if (createdTile.value > highestNewMergeValue)
+                    highestNewMergeValue = createdTile.value;
+            }
+
+            maybeShowGameOver(highestNewMergeValue);
         });
 
         activeTransition.play();
     }
 
-    private void maybeShowGameOver() {
-        if (!game.isGameOver())
+    private void maybeShowGameOver(int newestValue) {
+        if (!game.isGameOver() && (newestValue != Config.WINNING_VALUE || sawEndScreen))
             return;
+
+        sawEndScreen = true;
+        boolean didWin = newestValue == Config.WINNING_VALUE;
 
         primaryStage.removeEventHandler(KeyEvent.KEY_PRESSED, gameEventHandler);
 
@@ -150,17 +161,28 @@ class GameController {
         gridPane.setAlignment(Pos.CENTER);
         board.getChildren().add(gridPane);
 
-        final Text text = new Text("Oh rats, the game is over. Good try though :)");
+        final Text text = new Text(didWin ? "YOU WON!!!" : "Oh rats, the game is over. Good try though :)");
         text.setStroke(Color.WHITE);
-        gridPane.add(text, 0, 0, 2, 1);
+        gridPane.add(text, 0, 0, 3, 1);
+
+        int nextCol = 0;
+
+        if (didWin) {
+            final Button keepPlayingButton = new Button("Keep playing");
+            keepPlayingButton.setOnAction((e) -> {
+                primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, gameEventHandler);
+                board.getChildren().remove(gridPane);
+            });
+            gridPane.add(keepPlayingButton, nextCol++, 1);
+        }
 
         final Button continueButton = new Button("New game");
         continueButton.setOnAction((e) -> new GameController(primaryStage, new Game()).startGame());
-        gridPane.add(continueButton, 0, 1);
+        gridPane.add(continueButton, nextCol++, 1);
 
         final Button quitButton = new Button("Quit");
         quitButton.setOnAction((e) -> System.exit(0));
-        gridPane.add(quitButton, 1, 1);
+        gridPane.add(quitButton, nextCol, 1);
 
         FadeTransition transition = new FadeTransition(Duration.seconds(1), gridPane);
         transition.setFromValue(0);

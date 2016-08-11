@@ -9,6 +9,7 @@ class Config {
 
     static final int GRID_SIZE = 4;
     static final int STARTING_TILES = 2;
+    static final int WINNING_VALUE = 2;
 
     static final Color BACKGROUND_COLOR = Color.web("#BBADA0");
     static final Color EMPTY_TILE_COLOR = Color.web("#cdc1b4");
