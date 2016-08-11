@@ -57,8 +57,8 @@ class GameController {
             ArrayList<Transition> moveTransitions = new ArrayList<>();
             for (Tile movedTile : moveResult.movedTiles) {
                 final TileController tileController = visibleTileViews.get(movedTile);
-                Transition t = tileController.moveTransition();
-                moveTransitions.add(t);
+                Transition moveTransition = tileController.moveTransition();
+                moveTransitions.add(moveTransition);
             }
             ParallelTransition parallelMoveTransition = new ParallelTransition((Animation[]) moveTransitions.toArray());
 
@@ -67,15 +67,15 @@ class GameController {
             TileController newTileController = new TileController(moveResult.newTile);
             board.getChildren().add(newTileController.pane);
             visibleTileViews.put(moveResult.newTile, newTileController);
-            Transition t = newTileController.creationTransition();
-            popUpTransitions.add(t);
+            Transition creationTransition = newTileController.creationTransition();
+            popUpTransitions.add(creationTransition);
 
             for (Tile createdTile : moveResult.newTilesFromMerge) {
                 final TileController tileController = new TileController(createdTile);
                 board.getChildren().add(tileController.pane);
                 visibleTileViews.put(createdTile, tileController);
-                Transition t = tileController.mergeTransition();
-                popUpTransitions.add(t);
+                Transition mergeTransition = tileController.mergeTransition();
+                popUpTransitions.add(mergeTransition);
             }
             ParallelTransition parallelPopUpTransition = new ParallelTransition((Animation[]) popUpTransitions.toArray());
 
