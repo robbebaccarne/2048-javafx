@@ -9,7 +9,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.util.Duration;
 
 import java.awt.*;
 
@@ -44,8 +43,8 @@ class TileController {
         return new Point(px, py);
     }
 
-    Transition makeTransition() {
-        TranslateTransition tt = new TranslateTransition(Duration.millis(800), pane);
+    Transition moveTransition() {
+        TranslateTransition tt = new TranslateTransition(Config.ANIMATION_DURATION_FIRST_PART, pane);
 
         Point p = getPixelPoint(tile.spot);
 
@@ -53,5 +52,13 @@ class TileController {
         tt.setToY(p.y);
 //        tt.setCycleCount(1);
         return tt;
+    }
+
+    Transition mergeTransition() {
+        return null;
+    }
+
+    Transition creationTransition() {
+        return null;
     }
 }

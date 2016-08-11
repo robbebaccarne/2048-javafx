@@ -8,6 +8,9 @@ class Grid {
     private final Random randomizer = new Random();
     private Tile[][] tiles = new Tile[Config.GRID_SIZE][Config.GRID_SIZE];
 
+    class MergeResult {
+    }
+
     Grid rotatedGridClockwise() {
         Grid newGrid = new Grid();
         for (int x = 0; x < Config.GRID_SIZE; x++) {
@@ -18,8 +21,8 @@ class Grid {
         return newGrid;
     }
 
-    void mergeLeft() {
-
+    MergeResult mergeLeft() {
+        return null;
     }
 
     Tile addTile() {

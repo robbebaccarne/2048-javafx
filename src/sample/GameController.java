@@ -1,5 +1,8 @@
 package sample;
 
+import javafx.animation.Animation;
+import javafx.animation.ParallelTransition;
+import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
@@ -46,17 +49,38 @@ class GameController {
             return;
 
         final Game.Move nextMove = queuedMoves.pop();
-        final Game.MoveResult result = game.runMove(nextMove);
+        final Game.MoveResult moveResult = game.runMove(nextMove);
 
-        if (result.isGameOver) {
+        if (moveResult.isGameOver) {
             System.out.println("Game over!");
-        }
-        else {
-            for (Tile movedTile : result.movedTiles) {
+        } else {
+            ArrayList<Transition> moveTransitions = new ArrayList<>();
+            for (Tile movedTile : moveResult.movedTiles) {
                 final TileController tileController = visibleTileViews.get(movedTile);
-                Transition t = tileController.makeTransition();
-                t.play();
+                Transition t = tileController.moveTransition();
+                moveTransitions.add(t);
             }
+            ParallelTransition parallelMoveTransition = new ParallelTransition((Animation[]) moveTransitions.toArray());
+
+            ArrayList<Transition> popUpTransitions = new ArrayList<>();
+
+            TileController newTileController = new TileController(moveResult.newTile);
+            board.getChildren().add(newTileController.pane);
+            visibleTileViews.put(moveResult.newTile, newTileController);
+            Transition t = newTileController.creationTransition();
+            popUpTransitions.add(t);
+
+            for (Tile createdTile : moveResult.newTilesFromMerge) {
+                final TileController tileController = new TileController(createdTile);
+                board.getChildren().add(tileController.pane);
+                visibleTileViews.put(createdTile, tileController);
+                Transition t = tileController.mergeTransition();
+                popUpTransitions.add(t);
+            }
+            ParallelTransition parallelPopUpTransition = new ParallelTransition((Animation[]) popUpTransitions.toArray());
+
+            SequentialTransition allTransitions = new SequentialTransition(parallelMoveTransition, parallelPopUpTransition);
+            allTransitions.play();
         }
     }
 

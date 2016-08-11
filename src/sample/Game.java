@@ -14,24 +14,28 @@ class Game {
     }
 
     MoveResult runMove(Move move) {
-        MoveResult result = new MoveResult();
+        MoveResult moveResult = new MoveResult();
 
         int rotations = move.rotations;
+
+        Grid.MergeResult mergeResult;
 
         Grid tempGrid = grid;
         for (int i = 0; i < 4; i++) {
             if (i == rotations) {
-                tempGrid.mergeLeft();
+                mergeResult = tempGrid.mergeLeft();
             }
             tempGrid = tempGrid.rotatedGridClockwise();
         }
+
+        moveResult.isGameOver = false;
 
 //        final Tile tile = initialTiles.get(0);
 //        tile.spot = new Grid.Coordinate(tile.spot.x, tile.spot.y + 1);
 //
 //        result.movedTiles = initialTiles;
 
-        return result;
+        return moveResult;
     }
 
     enum Move {
@@ -53,4 +57,5 @@ class Game {
         ArrayList<Tile> movedTiles = new ArrayList<>();
         ArrayList<Tile> newTilesFromMerge = new ArrayList<>();
     }
+
 }
