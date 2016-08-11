@@ -24,6 +24,7 @@ class GameController {
     private final Pane board = new Pane();
 
     private ArrayDeque<Game.Move> queuedMoves = new ArrayDeque<>();
+    private boolean isAnimating;
 
     GameController(Stage primaryStage, Game game) {
         this.primaryStage = primaryStage;
@@ -45,7 +46,7 @@ class GameController {
     }
 
     private void runNextMove() {
-        if (queuedMoves.isEmpty())
+        if (queuedMoves.isEmpty() || isAnimating)
             return;
 
         final Game.Move nextMove = queuedMoves.pop();
@@ -80,6 +81,13 @@ class GameController {
             ParallelTransition parallelPopUpTransition = new ParallelTransition((Animation[]) popUpTransitions.toArray());
 
             SequentialTransition allTransitions = new SequentialTransition(parallelMoveTransition, parallelPopUpTransition);
+
+            isAnimating = true;
+            allTransitions.setOnFinished((actionEvent) -> {
+                isAnimating = false;
+                runNextMove();
+            });
+
             allTransitions.play();
         }
     }
