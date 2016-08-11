@@ -155,10 +155,7 @@ class GameController {
         gridPane.add(text, 0, 0, 2, 1);
 
         final Button continueButton = new Button("New game");
-        continueButton.setOnAction((e) -> {
-            primaryStage.close();
-            new GameController(primaryStage, new Game()).startGame();
-        });
+        continueButton.setOnAction((e) -> new GameController(primaryStage, new Game()).startGame());
         gridPane.add(continueButton, 0, 1);
 
         final Button quitButton = new Button("Quit");
