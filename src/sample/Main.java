@@ -59,10 +59,6 @@ public class Main extends Application {
 //        pt = new ParallelTransition(st, tt);
 //
 //
-////        final KeyValue kv = new KeyValue(rect.xProperty(), 300,
-////                Interpolator.EASE_BOTH);
-////        final KeyFrame kf = new KeyFrame(Duration.millis(500), kv);
-////        pt.getKeyFrames().add(kf);
 //
 //
 //        pt.setOnFinished((event) -> {

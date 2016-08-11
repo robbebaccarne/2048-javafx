@@ -48,6 +48,7 @@ class TileController {
         Point p = getPixelPoint(tile.spot);
         tt.setToX(p.x);
         tt.setToY(p.y);
+        tt.setInterpolator(Interpolator.SPLINE(Config.ANIMATION_MOVE_EASING, 1, Config.ANIMATION_MOVE_EASING, 1));
         return tt;
     }
 

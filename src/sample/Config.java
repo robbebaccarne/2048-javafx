@@ -17,7 +17,8 @@ class Config {
 
     final static Duration ANIMATION_DURATION_FIRST_PART = Duration.millis(125);
     final static Duration ANIMATION_DURATION_SECOND_PART = Duration.millis(125);
-    final static Duration ANIMATION_PAUSE_BEFORE_SECOND_PART = ANIMATION_DURATION_FIRST_PART.multiply(0.9);
+    final static Duration ANIMATION_PAUSE_BEFORE_SECOND_PART = ANIMATION_DURATION_FIRST_PART.multiply(0.85);
+    final static double ANIMATION_MOVE_EASING = 0.9;
 
     static class TileDesign {
         static final private TileDesign unknown = new TileDesign(Color.web("#3c3a32"), Color.web("#f9f6f2"), 5);
