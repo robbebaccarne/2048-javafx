@@ -1,6 +1,7 @@
 package sample;
 
 import javafx.animation.*;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -23,11 +24,29 @@ class GameController {
     private Stage primaryStage;
     private Game game;
     private ParallelTransition activeTransition;
+    private final EventHandler<KeyEvent> gameEventHandler = (keyEvent) -> {
+        switch (keyEvent.getCode()) {
+            case UP:
+                runMove(Game.Move.Up);
+                break;
+            case DOWN:
+                runMove(Game.Move.Down);
+                break;
+            case LEFT:
+                runMove(Game.Move.Left);
+                break;
+            case RIGHT:
+                runMove(Game.Move.Right);
+                break;
+        }
+    };
 
     GameController(Stage primaryStage, Game game) {
         this.primaryStage = primaryStage;
         this.game = game;
+    }
 
+    void startGame() {
         final ArrayList<Tile> initialTiles = game.startGame();
         ArrayList<Transition> creationTransitions = new ArrayList<>();
 
@@ -42,6 +61,18 @@ class GameController {
 
         ParallelTransition creationTransition = new ParallelTransition(creationTransitions.toArray(new Transition[0]));
         creationTransition.play();
+
+        StackPane root = new StackPane();
+        root.setBackground(new Background(new BackgroundFill(Config.BACKGROUND_COLOR, CornerRadii.EMPTY, Insets.EMPTY)));
+        root.getChildren().add(buildBackground());
+        root.getChildren().add(board);
+
+        Scene scene = new Scene(root, Config.BOARD_PIXEL_LENGTH, Config.BOARD_PIXEL_LENGTH);
+        primaryStage.setTitle("2048");
+        primaryStage.setResizable(false);
+        primaryStage.setScene(scene);
+        primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, gameEventHandler);
+        primaryStage.show();
     }
 
     private void runMove(Game.Move move) {
@@ -108,10 +139,14 @@ class GameController {
         if (!game.isGameOver())
             return;
 
+        primaryStage.removeEventHandler(KeyEvent.KEY_PRESSED, gameEventHandler);
+
         GridPane gridPane = new GridPane();
         gridPane.setPrefSize(board.getWidth(), board.getHeight());
         gridPane.setBackground(new Background(new BackgroundFill(Color.web("#000", 0.35), CornerRadii.EMPTY, Insets.EMPTY)));
         gridPane.setOpacity(0);
+        gridPane.setHgap(20);
+        gridPane.setVgap(20);
         gridPane.setAlignment(Pos.CENTER);
         board.getChildren().add(gridPane);
 
@@ -121,7 +156,8 @@ class GameController {
 
         final Button continueButton = new Button("New game");
         continueButton.setOnAction((e) -> {
-            board.getChildren().remove(gridPane);
+            primaryStage.close();
+            new GameController(primaryStage, new Game()).startGame();
         });
         gridPane.add(continueButton, 0, 1);
 
@@ -133,34 +169,6 @@ class GameController {
         transition.setFromValue(0);
         transition.setToValue(1);
         transition.play();
-    }
-
-    void begin() {
-        StackPane root = new StackPane();
-        root.getChildren().add(buildBackground());
-        root.getChildren().add(board);
-        root.setBackground(new Background(new BackgroundFill(Config.BACKGROUND_COLOR, CornerRadii.EMPTY, Insets.EMPTY)));
-
-        Scene scene = new Scene(root, Config.BOARD_PIXEL_LENGTH, Config.BOARD_PIXEL_LENGTH);
-        primaryStage.setResizable(false);
-        primaryStage.setScene(scene);
-        primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, (keyEvent) -> {
-            switch (keyEvent.getCode()) {
-                case UP:
-                    runMove(Game.Move.Up);
-                    break;
-                case DOWN:
-                    runMove(Game.Move.Down);
-                    break;
-                case LEFT:
-                    runMove(Game.Move.Left);
-                    break;
-                case RIGHT:
-                    runMove(Game.Move.Right);
-                    break;
-            }
-        });
-        primaryStage.show();
     }
 
     private Pane buildBackground() {
