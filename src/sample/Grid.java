@@ -36,6 +36,7 @@ class Grid {
 
     MergeResult mergeLeft() {
         MergeResult mergeResult = new MergeResult();
+        mergeResult.didChange = false;
 
         for (int y = 0; y < Config.GRID_SIZE; y++) {
             Tile lastUnmergedTile = null;

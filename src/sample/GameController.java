@@ -31,12 +31,19 @@ class GameController {
         this.game = game;
 
         final ArrayList<Tile> initialTiles = game.startGame();
+        ArrayList<Transition> creationTransitions = new ArrayList<>();
 
         for (Tile tile : initialTiles) {
             final TileController tileController = new TileController(tile);
             board.getChildren().add(tileController.pane);
             visibleTileViews.put(tile, tileController);
+
+            final Transition transition = tileController.creationTransition();
+            creationTransitions.add(transition);
         }
+
+        ParallelTransition creationTransition = new ParallelTransition(creationTransitions.toArray(new Transition[0]));
+        creationTransition.play();
     }
 
     private void queueMove(Game.Move move) {

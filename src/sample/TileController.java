@@ -1,7 +1,6 @@
 package sample;
 
-import javafx.animation.Transition;
-import javafx.animation.TranslateTransition;
+import javafx.animation.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -15,7 +14,7 @@ import java.awt.*;
 class TileController {
 
     Pane pane;
-    Tile tile;
+    private Tile tile;
 
     TileController(Tile tile) {
         this.tile = tile;
@@ -35,6 +34,7 @@ class TileController {
         pane = new StackPane(rectangle, text);
         pane.setTranslateX(p.x);
         pane.setTranslateY(p.y);
+        pane.setOpacity(0);
     }
 
     static Point getPixelPoint(Grid.Coordinate spot) {
@@ -52,10 +52,30 @@ class TileController {
     }
 
     Transition mergeTransition() {
-        return null;
+        FadeTransition fadeTransition = new FadeTransition(Config.ANIMATION_DURATION_SECOND_PART, pane);
+        fadeTransition.setFromValue(0);
+        fadeTransition.setToValue(1);
+
+        ScaleTransition scaleTransition = new ScaleTransition(Config.ANIMATION_DURATION_SECOND_PART, pane);
+        scaleTransition.setFromX(0.2);
+        scaleTransition.setFromY(0.2);
+        scaleTransition.setToX(1);
+        scaleTransition.setToY(1);
+
+        return new ParallelTransition(fadeTransition, scaleTransition);
     }
 
     Transition creationTransition() {
-        return null;
+        FadeTransition fadeTransition = new FadeTransition(Config.ANIMATION_DURATION_SECOND_PART, pane);
+        fadeTransition.setFromValue(0);
+        fadeTransition.setToValue(1);
+
+        ScaleTransition scaleTransition = new ScaleTransition(Config.ANIMATION_DURATION_SECOND_PART, pane);
+        scaleTransition.setFromX(0.2);
+        scaleTransition.setFromY(0.2);
+        scaleTransition.setToX(1);
+        scaleTransition.setToY(1);
+
+        return new ParallelTransition(fadeTransition, scaleTransition);
     }
 }
