@@ -39,6 +39,7 @@ class Game {
         }
 
         moveResult.newTilesFromMerge = mergeResult.newTilesFromMerge;
+        moveResult.goneTilesFromMerge = mergeResult.mergedTiles;
         moveResult.newTile = grid.addRandomTile();
         moveResult.isGameOver = false;
         moveResult.didChange = true;
@@ -69,6 +70,7 @@ class Game {
         boolean isGameOver = false;
         Tile newTile;
         ArrayList<Tile> newTilesFromMerge = new ArrayList<>();
+        ArrayList<Tile> goneTilesFromMerge = new ArrayList<>();
     }
 
 }

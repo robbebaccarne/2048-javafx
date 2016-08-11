@@ -91,6 +91,12 @@ class GameController {
 
             isAnimating = true;
             allTransitions.setOnFinished((actionEvent) -> {
+                for (Tile goneTile : moveResult.goneTilesFromMerge) {
+                    final TileController tileController = visibleTileViews.get(goneTile);
+                    board.getChildren().remove(tileController.pane);
+                    visibleTileViews.remove(goneTile);
+                }
+
                 isAnimating = false;
                 runNextMove();
             });
