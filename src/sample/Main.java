@@ -12,7 +12,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        new GameController(primaryStage, new Game()).startGame();
+        new GameController(primaryStage).startGame();
     }
 
 }

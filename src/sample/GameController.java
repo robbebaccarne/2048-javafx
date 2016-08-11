@@ -22,7 +22,7 @@ class GameController {
     private final HashMap<Tile, TileView> visibleTileViews = new HashMap<>();
     private final Pane board = new Pane();
     private Stage primaryStage;
-    private Game game;
+    private Game game = new Game();
     private ParallelTransition activeTransition;
     private final EventHandler<KeyEvent> gameEventHandler = (keyEvent) -> {
         switch (keyEvent.getCode()) {
@@ -42,9 +42,8 @@ class GameController {
     };
     private boolean sawEndScreen = false;
 
-    GameController(Stage primaryStage, Game game) {
+    GameController(Stage primaryStage) {
         this.primaryStage = primaryStage;
-        this.game = game;
     }
 
     void startGame() {
@@ -101,7 +100,6 @@ class GameController {
         ArrayList<Transition> popUpTransitions = new ArrayList<>();
 
         TileView newTileView = new TileView(moveResult.newTile);
-        System.out.println(moveResult.newTile);
         board.getChildren().add(newTileView.pane);
         visibleTileViews.put(moveResult.newTile, newTileView);
         Transition creationTransition = newTileView.creationTransition();
@@ -177,7 +175,7 @@ class GameController {
         }
 
         final Button continueButton = new Button("New game");
-        continueButton.setOnAction((e) -> new GameController(primaryStage, new Game()).startGame());
+        continueButton.setOnAction((e) -> new GameController(primaryStage).startGame());
         gridPane.add(continueButton, nextCol++, 1);
 
         final Button quitButton = new Button("Quit");
