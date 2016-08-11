@@ -16,10 +16,9 @@ import java.util.HashMap;
 
 class GameController {
     private final HashMap<Tile, TileController> visibleTileViews = new HashMap<>();
+    private final Pane board = new Pane();
     private Stage primaryStage;
     private Game game;
-    private final Pane board = new Pane();
-
     private ArrayDeque<Game.Move> queuedMoves = new ArrayDeque<>();
     private boolean isAnimating = false;
 
@@ -105,7 +104,7 @@ class GameController {
         }
     }
 
-    void setup() {
+    void begin() {
         StackPane root = new StackPane();
         root.getChildren().add(buildBackground());
         root.getChildren().add(board);
