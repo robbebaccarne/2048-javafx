@@ -62,7 +62,7 @@ class Grid {
                     Tile newTile = new Tile(currentTile.value + 1);
                     newRow.add(newTile);
 
-                    ArrayList<Tile> mergedTiles = new ArrayList<Tile>();
+                    ArrayList<Tile> mergedTiles = new ArrayList<>();
                     mergedTiles.add(lastUnmergedTile);
                     mergedTiles.add(currentTile);
 
@@ -132,8 +132,8 @@ class Grid {
         return coordinates.get(i);
     }
 
-    private ArrayList<Coordinate> openSpots() {
-        ArrayList<Coordinate> spots = new ArrayList<Coordinate>();
+    ArrayList<Coordinate> openSpots() {
+        ArrayList<Coordinate> spots = new ArrayList<>();
         for (int y = 0; y < Config.GRID_SIZE; y++) {
             for (int x = 0; x < Config.GRID_SIZE; x++) {
                 if (tiles[y][x] == null)
@@ -141,6 +141,34 @@ class Grid {
             }
         }
         return spots;
+    }
+
+    boolean canMergeLeft() {
+        for (int y = 0; y < Config.GRID_SIZE; y++) {
+
+            Tile lastTile = null;
+            for (int x = 0; x < Config.GRID_SIZE; x++) {
+
+                Tile thisTile = tiles[y][x];
+
+                if (thisTile == null)
+                    // we're on an empty tile, so do nothing
+                    continue;
+
+                if (lastTile == null) {
+                    // this is the first non-empty tile we found, store it for the next loop
+                    lastTile = thisTile;
+                } else if (lastTile.value != thisTile.value) {
+                    // we have two tiles but they aren't equal; abandon the last one
+                    lastTile = thisTile;
+                } else {
+                    // we found two equal tiles, which means we can merge
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     static class Coordinate {

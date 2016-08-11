@@ -41,7 +41,19 @@ class Game {
     }
 
     boolean isGameOver() {
-        return false;
+        // the game is over when the board is full and you can't merge in any direction
+
+        if (!grid.openSpots().isEmpty())
+            return false;
+
+        boolean isGameOver = true;
+        for (int i = 0; i < 4; i++) {
+            if (grid.canMergeLeft()) {
+                isGameOver = false;
+            }
+            grid.rotateClockwise();
+        }
+        return isGameOver;
     }
 
     enum Move {
