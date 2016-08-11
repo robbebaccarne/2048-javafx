@@ -48,9 +48,9 @@ class GameController {
 
         final Game.MoveResult moveResult = game.runMove(move);
 
-        if (moveResult.isGameOver) {
+        if (game.isGameOver()) {
             System.out.println("Game over!");
-        } else if (moveResult.didChange) {
+        } else if (moveResult.mergeResult.didChange) {
             ArrayList<Transition> moveTransitions = new ArrayList<>();
             for (Tile movedTile : visibleTileViews.keySet()) {
                 final TileView tileView = visibleTileViews.get(movedTile);
@@ -67,7 +67,7 @@ class GameController {
             Transition creationTransition = newTileView.creationTransition();
             popUpTransitions.add(creationTransition);
 
-            for (Tile createdTile : moveResult.newTilesFromMerge.keySet()) {
+            for (Tile createdTile : moveResult.mergeResult.newTilesFromMerge.keySet()) {
                 final TileView tileView = new TileView(createdTile);
                 board.getChildren().add(tileView.pane);
                 visibleTileViews.put(createdTile, tileView);
@@ -81,8 +81,8 @@ class GameController {
             activeTransition = new ParallelTransition(parallelMoveTransition, overallPopUpTransition);
 
             activeTransition.setOnFinished((actionEvent) -> {
-                for (Tile createdTile : moveResult.newTilesFromMerge.keySet()) {
-                    for (Tile goneTile : moveResult.newTilesFromMerge.get(createdTile)) {
+                for (Tile createdTile : moveResult.mergeResult.newTilesFromMerge.keySet()) {
+                    for (Tile goneTile : moveResult.mergeResult.newTilesFromMerge.get(createdTile)) {
                         final TileView tileView = visibleTileViews.get(goneTile);
                         board.getChildren().remove(tileView.pane);
                         visibleTileViews.remove(goneTile);

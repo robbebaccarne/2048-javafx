@@ -1,7 +1,6 @@
 package sample;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 class Game {
 
@@ -9,14 +8,14 @@ class Game {
 
     ArrayList<Tile> startGame() {
         ArrayList<Tile> initialTiles = new ArrayList<>();
-        initialTiles.add(grid.addRandomTile());
-        initialTiles.add(grid.addRandomTile());
+
+        for (int i = 0; i < Config.STARTING_TILES; i++)
+            initialTiles.add(grid.addRandomTile());
+
         return initialTiles;
     }
 
     MoveResult runMove(Move move) {
-        MoveResult moveResult = new MoveResult();
-
         Grid.MergeResult mergeResult = null;
         for (int i = 0; i < 4; i++) {
             if (i == move.rotations) {
@@ -27,22 +26,22 @@ class Game {
         assert mergeResult != null;
         grid.reassignCoordinates();
 
-
         for (Tile newTileFromMerge : mergeResult.newTilesFromMerge.keySet()) {
             for (Tile goneTile : mergeResult.newTilesFromMerge.get(newTileFromMerge)) {
                 goneTile.spot = newTileFromMerge.spot;
             }
         }
 
-        moveResult.didChange = mergeResult.didChange;
-        moveResult.newTilesFromMerge = mergeResult.newTilesFromMerge;
-        moveResult.isGameOver = false;
+        MoveResult moveResult = new MoveResult(mergeResult);
 
-        if (mergeResult.didChange) {
+        if (mergeResult.didChange && !isGameOver())
             moveResult.newTile = grid.addRandomTile();
-        }
 
         return moveResult;
+    }
+
+    boolean isGameOver() {
+        return false;
     }
 
     enum Move {
@@ -59,10 +58,12 @@ class Game {
     }
 
     class MoveResult {
-        boolean didChange = false;
-        boolean isGameOver = false;
         Tile newTile;
-        HashMap<Tile, ArrayList<Tile>> newTilesFromMerge = new HashMap<>();
+        Grid.MergeResult mergeResult;
+
+        MoveResult(Grid.MergeResult mergeResult) {
+            this.mergeResult = mergeResult;
+        }
     }
 
 }

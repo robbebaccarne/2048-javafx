@@ -34,8 +34,8 @@ class Grid {
         mergeResult.didChange = false;
 
         for (int y = 0; y < Config.GRID_SIZE; y++) {
-            Tile lastUnmergedTile = null;
 
+            Tile lastUnmergedTile = null;
             ArrayList<Tile> newRow = new ArrayList<>();
 
             for (int x = 0; x < Config.GRID_SIZE; x++) {

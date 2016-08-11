@@ -25,8 +25,8 @@ class TileDesign {
 
     final Color backColor;
     final Color foreColor;
-    Effect glow;
     final double sizeFraction;
+    Effect glow;
 
     private TileDesign(String backColor, String foreColor, Double outerGlowValue, Double innerGlowValue, double sizeFraction) {
         this.backColor = Color.web(backColor);
