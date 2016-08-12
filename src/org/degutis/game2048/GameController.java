@@ -76,7 +76,7 @@ class GameController {
     }
 
     private void runMove(Game.Move move) {
-        if (game.canMove())
+        if (!game.canMove())
             return;
 
         if (activeTransition != null) {
@@ -142,7 +142,7 @@ class GameController {
     }
 
     private void maybeShowGameOver(int newestValue) {
-        if (!game.canMove() && (newestValue != Config.WINNING_VALUE || sawEndScreen))
+        if (game.canMove() && (newestValue != Config.WINNING_VALUE || sawEndScreen))
             return;
 
         sawEndScreen = true;

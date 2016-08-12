@@ -34,7 +34,7 @@ class Game {
 
         MoveResult moveResult = new MoveResult(mergeResult);
 
-        if (mergeResult.didChange && !canMove())
+        if (mergeResult.didChange && !grid.openSpots().isEmpty())
             moveResult.newTile = grid.addRandomTile();
 
         return moveResult;
@@ -43,13 +43,13 @@ class Game {
     boolean canMove() {
         // if the board has open spots, you can move
         if (!grid.openSpots().isEmpty())
-            return false;
+            return true;
 
         // if there's no open spots, but you can merge, then you can move
-        boolean canMove = true;
+        boolean canMove = false;
         for (int i = 0; i < 4; i++) {
             if (grid.canMergeLeft()) {
-                canMove = false;
+                canMove = true;
             }
             grid.rotateClockwise();
         }
