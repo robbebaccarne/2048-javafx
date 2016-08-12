@@ -1,6 +1,7 @@
 package org.degutis.game2048;
 
 import javafx.animation.*;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -80,8 +81,13 @@ class GameController {
             return;
 
         if (activeTransition != null) {
+            final EventHandler<ActionEvent> oldHandler = activeTransition.getOnFinished();
+            activeTransition.setOnFinished(event -> {
+                oldHandler.handle(null);
+                runMove(move);
+            });
             activeTransition.jumpTo("end");
-            activeTransition = null;
+            return;
         }
 
         final Game.MoveResult moveResult = game.runMove(move);
@@ -118,7 +124,7 @@ class GameController {
 
         activeTransition = new ParallelTransition(parallelMoveTransition, overallPopUpTransition);
 
-        activeTransition.setOnFinished((actionEvent) -> {
+        activeTransition.setOnFinished(actionEvent -> {
             for (Tile createdTile : moveResult.mergeResult.newTilesFromMerge.keySet()) {
                 for (Tile goneTile : moveResult.mergeResult.newTilesFromMerge.get(createdTile)) {
                     final TileView tileView = visibleTileViews.get(goneTile);
