@@ -49,7 +49,7 @@ class GameController {
     }
 
     void startGame() {
-        final ArrayList<Tile> initialTiles = game.startGame();
+        final ArrayList<Tile> initialTiles = game.addInitialTiles();
         ArrayList<Transition> creationTransitions = new ArrayList<>();
 
         for (Tile tile : initialTiles) {

@@ -6,7 +6,7 @@ class Game {
 
     private Grid grid = new Grid();
 
-    ArrayList<Tile> startGame() {
+    ArrayList<Tile> addInitialTiles() {
         ArrayList<Tile> initialTiles = new ArrayList<>();
 
         for (int i = 0; i < Config.STARTING_TILES; i++)
