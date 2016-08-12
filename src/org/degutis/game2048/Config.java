@@ -25,4 +25,5 @@ class Config {
     final static Duration ANIMATION_PAUSE_BEFORE_SECOND_PART = ANIMATION_DURATION_FIRST_PART.multiply(0.85);
     final static double ANIMATION_MOVE_EASING = 0.9;
 
+    static final int BUTTON_FONT_SIZE = 18;
 }

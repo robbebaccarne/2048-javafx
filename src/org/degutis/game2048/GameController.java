@@ -11,6 +11,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -165,14 +166,16 @@ class GameController {
         gridPane.setAlignment(Pos.CENTER);
         board.getChildren().add(gridPane);
 
-        final Text text = new Text(didWin ? "YOU WON!!!" : "Oh rats, the game is over. Good try though :)");
-        text.setStroke(Color.WHITE);
+        final Text text = new Text(didWin ? "YOU WON!!! Great job!" : "Oh rats, the game is over.\nGood try though :)");
+        text.setFont(new Font(30));
+        text.setFill(Color.WHITE);
         gridPane.add(text, 0, 0, 3, 1);
 
         int nextCol = 0;
 
         if (didWin) {
             final Button keepPlayingButton = new Button("Keep playing");
+            keepPlayingButton.setFont(new Font(Config.BUTTON_FONT_SIZE));
             keepPlayingButton.setOnAction((e) -> {
                 primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, gameEventHandler);
                 board.getChildren().remove(gridPane);
@@ -181,10 +184,12 @@ class GameController {
         }
 
         final Button continueButton = new Button("New game");
+        continueButton.setFont(new Font(Config.BUTTON_FONT_SIZE));
         continueButton.setOnAction((e) -> new GameController(primaryStage).startGame());
         gridPane.add(continueButton, nextCol++, 1);
 
         final Button quitButton = new Button("Quit");
+        quitButton.setFont(new Font(Config.BUTTON_FONT_SIZE));
         quitButton.setOnAction((e) -> System.exit(0));
         gridPane.add(quitButton, nextCol, 1);
 
