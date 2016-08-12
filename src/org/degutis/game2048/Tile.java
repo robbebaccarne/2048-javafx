@@ -1,4 +1,4 @@
-package sample;
+package org.degutis.game2048;
 
 class Tile {
 

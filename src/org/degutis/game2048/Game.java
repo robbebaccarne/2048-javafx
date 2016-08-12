@@ -1,4 +1,4 @@
-package sample;
+package org.degutis.game2048;
 
 import java.util.ArrayList;
 
@@ -34,26 +34,26 @@ class Game {
 
         MoveResult moveResult = new MoveResult(mergeResult);
 
-        if (mergeResult.didChange && !isGameOver())
+        if (mergeResult.didChange && !canMove())
             moveResult.newTile = grid.addRandomTile();
 
         return moveResult;
     }
 
-    boolean isGameOver() {
-        // the game is over when the board is full and you can't merge in any direction
-
+    boolean canMove() {
+        // if the board has open spots, you can move
         if (!grid.openSpots().isEmpty())
             return false;
 
-        boolean isGameOver = true;
+        // if there's no open spots, but you can merge, then you can move
+        boolean canMove = true;
         for (int i = 0; i < 4; i++) {
             if (grid.canMergeLeft()) {
-                isGameOver = false;
+                canMove = false;
             }
             grid.rotateClockwise();
         }
-        return isGameOver;
+        return canMove;
     }
 
     enum Move {

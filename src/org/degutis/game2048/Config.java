@@ -1,4 +1,4 @@
-package sample;
+package org.degutis.game2048;
 
 import javafx.scene.paint.Color;
 import javafx.util.Duration;

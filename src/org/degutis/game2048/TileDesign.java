@@ -1,4 +1,4 @@
-package sample;
+package org.degutis.game2048;
 
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Effect;
