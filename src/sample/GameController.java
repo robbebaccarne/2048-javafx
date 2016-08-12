@@ -24,6 +24,7 @@ class GameController {
     private Stage primaryStage;
     private Game game = new Game();
     private ParallelTransition activeTransition;
+    private boolean sawEndScreen = false;
     private final EventHandler<KeyEvent> gameEventHandler = (keyEvent) -> {
         switch (keyEvent.getCode()) {
             case UP:
@@ -40,7 +41,6 @@ class GameController {
                 break;
         }
     };
-    private boolean sawEndScreen = false;
 
     GameController(Stage primaryStage) {
         this.primaryStage = primaryStage;
