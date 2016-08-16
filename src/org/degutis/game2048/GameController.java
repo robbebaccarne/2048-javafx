@@ -87,7 +87,7 @@ class GameController {
                 oldHandler.handle(null);
                 runMove(move);
             });
-            activeTransition.jumpTo("end");
+            activeTransition.setRate(10);
             return;
         }
 
