@@ -11,12 +11,12 @@ import javafx.scene.text.Text;
 
 import java.awt.*;
 
-class TileView {
+class TilePresenter {
 
     Pane pane;
     private Tile tile;
 
-    TileView(Tile tile) {
+    TilePresenter(Tile tile) {
         this.tile = tile;
         final TileDesign design = TileDesign.forValue(tile.value);
 
