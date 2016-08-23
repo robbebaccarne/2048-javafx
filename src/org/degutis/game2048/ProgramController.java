@@ -9,7 +9,7 @@ class ProgramController {
         gameController.newGame();
         primaryStage.setScene(gameController.scene);
         primaryStage.show();
-        gameController.scene.getRoot().requestFocus();
+        gameController.focusBoard();
     }
 
 }

@@ -20,18 +20,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 class GameController {
-    private HashMap<Tile, TileView> visibleTileViews;
+    private HashMap<Tile, TilePresenter> visibleTileViews;
     private Pane board;
     private Game game;
     private ParallelTransition activeTransition;
     private boolean sawEndScreen;
+    private boolean showingEndScreen;
     private StackPane root = new StackPane();
     Scene scene = new Scene(root, Config.BOARD_PIXEL_LENGTH, Config.BOARD_PIXEL_LENGTH);
-    private boolean showingEndScreen;
 
-    {
-        root.setBackground(new Background(new BackgroundFill(Config.BACKGROUND_COLOR, CornerRadii.EMPTY, Insets.EMPTY)));
-        root.addEventHandler(KeyEvent.KEY_PRESSED, (keyEvent) -> {
+    void newGame() {
+        game = new Game();
+        sawEndScreen = false;
+        showingEndScreen = false;
+
+        board = new Pane();
+        board.addEventHandler(KeyEvent.KEY_PRESSED, (keyEvent) -> {
             if (showingEndScreen)
                 return;
 
@@ -50,30 +54,24 @@ class GameController {
                     break;
             }
         });
-    }
 
-    void newGame() {
         visibleTileViews = new HashMap<>();
-        board = new Pane();
-        game = new Game();
-        sawEndScreen = false;
-        showingEndScreen = false;
-
         final ArrayList<Tile> initialTiles = game.addInitialTiles();
         ArrayList<Transition> creationTransitions = new ArrayList<>();
 
         for (Tile tile : initialTiles) {
-            final TileView tileView = new TileView(tile);
-            board.getChildren().add(tileView.pane);
-            visibleTileViews.put(tile, tileView);
+            final TilePresenter tilePresenter = new TilePresenter(tile);
+            board.getChildren().add(tilePresenter.pane);
+            visibleTileViews.put(tile, tilePresenter);
 
-            final Transition transition = tileView.creationTransition();
+            final Transition transition = tilePresenter.creationTransition();
             creationTransitions.add(transition);
         }
 
         ParallelTransition creationTransition = new ParallelTransition(creationTransitions.toArray(new Transition[0]));
         creationTransition.play();
 
+        root.setBackground(new Background(new BackgroundFill(Config.BACKGROUND_COLOR, CornerRadii.EMPTY, Insets.EMPTY)));
         root.getChildren().clear();
         root.getChildren().add(buildBackground());
         root.getChildren().add(board);
@@ -100,25 +98,25 @@ class GameController {
 
         ArrayList<Transition> moveTransitions = new ArrayList<>();
         for (Tile movedTile : visibleTileViews.keySet()) {
-            final TileView tileView = visibleTileViews.get(movedTile);
-            Transition moveTransition = tileView.moveTransition();
+            final TilePresenter tilePresenter = visibleTileViews.get(movedTile);
+            Transition moveTransition = tilePresenter.moveTransition();
             moveTransitions.add(moveTransition);
         }
         ParallelTransition parallelMoveTransition = new ParallelTransition(moveTransitions.toArray(new Animation[0]));
 
         ArrayList<Transition> popUpTransitions = new ArrayList<>();
 
-        TileView newTileView = new TileView(moveResult.newTile);
-        board.getChildren().add(newTileView.pane);
-        visibleTileViews.put(moveResult.newTile, newTileView);
-        Transition creationTransition = newTileView.creationTransition();
+        TilePresenter newTilePresenter = new TilePresenter(moveResult.newTile);
+        board.getChildren().add(newTilePresenter.pane);
+        visibleTileViews.put(moveResult.newTile, newTilePresenter);
+        Transition creationTransition = newTilePresenter.creationTransition();
         popUpTransitions.add(creationTransition);
 
         for (Tile createdTile : moveResult.mergeResult.newTilesFromMerge.keySet()) {
-            final TileView tileView = new TileView(createdTile);
-            board.getChildren().add(tileView.pane);
-            visibleTileViews.put(createdTile, tileView);
-            Transition mergeTransition = tileView.mergeTransition();
+            final TilePresenter tilePresenter = new TilePresenter(createdTile);
+            board.getChildren().add(tilePresenter.pane);
+            visibleTileViews.put(createdTile, tilePresenter);
+            Transition mergeTransition = tilePresenter.mergeTransition();
             popUpTransitions.add(mergeTransition);
         }
         ParallelTransition parallelPopUpTransition = new ParallelTransition(popUpTransitions.toArray(new Animation[0]));
@@ -130,8 +128,8 @@ class GameController {
         activeTransition.setOnFinished(actionEvent -> {
             for (Tile createdTile : moveResult.mergeResult.newTilesFromMerge.keySet()) {
                 for (Tile goneTile : moveResult.mergeResult.newTilesFromMerge.get(createdTile)) {
-                    final TileView tileView = visibleTileViews.get(goneTile);
-                    board.getChildren().remove(tileView.pane);
+                    final TilePresenter tilePresenter = visibleTileViews.get(goneTile);
+                    board.getChildren().remove(tilePresenter.pane);
                     visibleTileViews.remove(goneTile);
                 }
             }
@@ -178,9 +176,9 @@ class GameController {
             final Button keepPlayingButton = new Button("Keep playing");
             keepPlayingButton.setFont(new Font(Config.BUTTON_FONT_SIZE));
             keepPlayingButton.setOnAction((e) -> {
-                board.getChildren().remove(gridPane);
-                board.requestFocus();
                 showingEndScreen = false;
+                board.getChildren().remove(gridPane);
+                focusBoard();
             });
             gridPane.add(keepPlayingButton, nextCol++, 1);
         }
@@ -188,22 +186,16 @@ class GameController {
         final Button continueButton = new Button("New game");
         continueButton.setFont(new Font(Config.BUTTON_FONT_SIZE));
         continueButton.setOnAction(e -> {
+            showingEndScreen = false;
             newGame();
-            board.requestFocus();
+            focusBoard();
         });
-        gridPane.add(continueButton, nextCol++, 1);
-
-        final Button quitButton = new Button("Quit");
-        quitButton.setFont(new Font(Config.BUTTON_FONT_SIZE));
-        quitButton.setOnAction((e) -> System.exit(0));
-        gridPane.add(quitButton, nextCol, 1);
+        gridPane.add(continueButton, nextCol, 1);
 
         FadeTransition transition = new FadeTransition(Duration.seconds(1), gridPane);
         transition.setFromValue(0);
         transition.setToValue(1);
         transition.play();
-
-        root.requestFocus();
     }
 
     private Pane buildBackground() {
@@ -214,7 +206,7 @@ class GameController {
                 r.setArcWidth(Config.TILE_PIXEL_RADIUS);
                 r.setArcHeight(Config.TILE_PIXEL_RADIUS);
                 r.setFill(Config.EMPTY_TILE_COLOR);
-                Point point = TileView.getPixelPoint(new Grid.Coordinate(x, y));
+                Point point = TilePresenter.getPixelPoint(new Grid.Coordinate(x, y));
                 r.setTranslateX(point.x);
                 r.setTranslateY(point.y);
                 backgroundPane.getChildren().add(r);
@@ -223,4 +215,7 @@ class GameController {
         return backgroundPane;
     }
 
+    void focusBoard() {
+        board.requestFocus();
+    }
 }
