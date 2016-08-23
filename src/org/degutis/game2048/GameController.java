@@ -5,7 +5,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
@@ -26,8 +25,7 @@ class GameController {
     private ParallelTransition activeTransition;
     private boolean sawEndScreen;
     private boolean showingEndScreen;
-    private StackPane root = new StackPane();
-    Scene scene = new Scene(root, Config.BOARD_PIXEL_LENGTH, Config.BOARD_PIXEL_LENGTH);
+    final StackPane root = new StackPane();
 
     void newGame() {
         game = new Game();
@@ -35,6 +33,7 @@ class GameController {
         showingEndScreen = false;
 
         board = new Pane();
+        board.setPrefSize(Config.BOARD_PIXEL_LENGTH, Config.BOARD_PIXEL_LENGTH);
         board.addEventHandler(KeyEvent.KEY_PRESSED, (keyEvent) -> {
             if (showingEndScreen)
                 return;
