@@ -27,14 +27,8 @@ class GameController {
     private boolean showingEndScreen;
     final StackPane root = new StackPane();
 
-    void newGame() {
-        game = new Game();
-        sawEndScreen = false;
-        showingEndScreen = false;
-
-        board = new Pane();
-        board.setPrefSize(Config.BOARD_PIXEL_LENGTH, Config.BOARD_PIXEL_LENGTH);
-        board.addEventHandler(KeyEvent.KEY_PRESSED, (keyEvent) -> {
+    {
+        root.addEventHandler(KeyEvent.KEY_PRESSED, (keyEvent) -> {
             if (showingEndScreen)
                 return;
 
@@ -53,6 +47,15 @@ class GameController {
                     break;
             }
         });
+    }
+
+    void newGame() {
+        game = new Game();
+        sawEndScreen = false;
+        showingEndScreen = false;
+
+        board = new Pane();
+        board.setPrefSize(Config.BOARD_PIXEL_LENGTH, Config.BOARD_PIXEL_LENGTH);
 
         visibleTileViews = new HashMap<>();
         final ArrayList<Tile> initialTiles = game.addInitialTiles();
@@ -177,7 +180,7 @@ class GameController {
             keepPlayingButton.setOnAction((e) -> {
                 showingEndScreen = false;
                 board.getChildren().remove(gridPane);
-                focusBoard();
+                root.requestFocus();
             });
             gridPane.add(keepPlayingButton, nextCol++, 1);
         }
@@ -187,7 +190,7 @@ class GameController {
         continueButton.setOnAction(e -> {
             showingEndScreen = false;
             newGame();
-            focusBoard();
+            root.requestFocus();
         });
         gridPane.add(continueButton, nextCol, 1);
 
@@ -214,7 +217,4 @@ class GameController {
         return backgroundPane;
     }
 
-    void focusBoard() {
-        board.requestFocus();
-    }
 }
