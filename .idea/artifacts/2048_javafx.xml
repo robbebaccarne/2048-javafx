@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="javafx" name="2048-javafx">
+    <output-path>$PROJECT_DIR$/out/artifacts/2048_javafx</output-path>
+    <root id="root">
+      <element id="archive" name="2048_javafx.jar">
+        <element id="module-output" name="2048-javafx" />
+      </element>
+    </root>
+  </artifact>
+</component>

@@ -12,7 +12,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        new GameController(primaryStage).startGame();
+        primaryStage.setTitle("2048");
+        primaryStage.setResizable(false);
+        new ProgramController().start(primaryStage);
     }
 
 }

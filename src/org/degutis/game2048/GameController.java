@@ -13,7 +13,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.awt.*;
@@ -21,34 +20,45 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 class GameController {
-    private final HashMap<Tile, TileView> visibleTileViews = new HashMap<>();
-    private final Pane board = new Pane();
-    private Stage primaryStage;
-    private Game game = new Game();
+    private HashMap<Tile, TileView> visibleTileViews;
+    private Pane board;
+    private Game game;
     private ParallelTransition activeTransition;
-    private boolean sawEndScreen = false;
-    private final EventHandler<KeyEvent> gameEventHandler = (keyEvent) -> {
-        switch (keyEvent.getCode()) {
-            case UP:
-                runMove(Game.Move.Up);
-                break;
-            case DOWN:
-                runMove(Game.Move.Down);
-                break;
-            case LEFT:
-                runMove(Game.Move.Left);
-                break;
-            case RIGHT:
-                runMove(Game.Move.Right);
-                break;
-        }
-    };
+    private boolean sawEndScreen;
+    private StackPane root = new StackPane();
+    Scene scene = new Scene(root, Config.BOARD_PIXEL_LENGTH, Config.BOARD_PIXEL_LENGTH);
+    private boolean showingEndScreen;
 
-    GameController(Stage primaryStage) {
-        this.primaryStage = primaryStage;
+    {
+        root.setBackground(new Background(new BackgroundFill(Config.BACKGROUND_COLOR, CornerRadii.EMPTY, Insets.EMPTY)));
+        root.addEventHandler(KeyEvent.KEY_PRESSED, (keyEvent) -> {
+            if (showingEndScreen)
+                return;
+
+            switch (keyEvent.getCode()) {
+                case UP:
+                    runMove(Game.Move.Up);
+                    break;
+                case DOWN:
+                    runMove(Game.Move.Down);
+                    break;
+                case LEFT:
+                    runMove(Game.Move.Left);
+                    break;
+                case RIGHT:
+                    runMove(Game.Move.Right);
+                    break;
+            }
+        });
     }
 
-    void startGame() {
+    void newGame() {
+        visibleTileViews = new HashMap<>();
+        board = new Pane();
+        game = new Game();
+        sawEndScreen = false;
+        showingEndScreen = false;
+
         final ArrayList<Tile> initialTiles = game.addInitialTiles();
         ArrayList<Transition> creationTransitions = new ArrayList<>();
 
@@ -64,17 +74,9 @@ class GameController {
         ParallelTransition creationTransition = new ParallelTransition(creationTransitions.toArray(new Transition[0]));
         creationTransition.play();
 
-        StackPane root = new StackPane();
-        root.setBackground(new Background(new BackgroundFill(Config.BACKGROUND_COLOR, CornerRadii.EMPTY, Insets.EMPTY)));
+        root.getChildren().clear();
         root.getChildren().add(buildBackground());
         root.getChildren().add(board);
-
-        Scene scene = new Scene(root, Config.BOARD_PIXEL_LENGTH, Config.BOARD_PIXEL_LENGTH);
-        primaryStage.setTitle("2048");
-        primaryStage.setResizable(false);
-        primaryStage.setScene(scene);
-        primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, gameEventHandler);
-        primaryStage.show();
     }
 
     private void runMove(Game.Move move) {
@@ -152,10 +154,9 @@ class GameController {
         if (game.canMove() && (newestValue != Config.WINNING_VALUE || sawEndScreen))
             return;
 
+        showingEndScreen = true;
         sawEndScreen = true;
         boolean didWin = newestValue == Config.WINNING_VALUE;
-
-        primaryStage.removeEventHandler(KeyEvent.KEY_PRESSED, gameEventHandler);
 
         GridPane gridPane = new GridPane();
         gridPane.setPrefSize(board.getWidth(), board.getHeight());
@@ -177,15 +178,19 @@ class GameController {
             final Button keepPlayingButton = new Button("Keep playing");
             keepPlayingButton.setFont(new Font(Config.BUTTON_FONT_SIZE));
             keepPlayingButton.setOnAction((e) -> {
-                primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, gameEventHandler);
                 board.getChildren().remove(gridPane);
+                board.requestFocus();
+                showingEndScreen = false;
             });
             gridPane.add(keepPlayingButton, nextCol++, 1);
         }
 
         final Button continueButton = new Button("New game");
         continueButton.setFont(new Font(Config.BUTTON_FONT_SIZE));
-        continueButton.setOnAction((e) -> new GameController(primaryStage).startGame());
+        continueButton.setOnAction(e -> {
+            newGame();
+            board.requestFocus();
+        });
         gridPane.add(continueButton, nextCol++, 1);
 
         final Button quitButton = new Button("Quit");
@@ -197,6 +202,8 @@ class GameController {
         transition.setFromValue(0);
         transition.setToValue(1);
         transition.play();
+
+        root.requestFocus();
     }
 
     private Pane buildBackground() {
