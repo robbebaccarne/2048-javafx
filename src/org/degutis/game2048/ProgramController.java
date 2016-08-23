@@ -13,7 +13,11 @@ class ProgramController {
         Tab boardTab = new Tab("Game", gameController.root);
         boardTab.setClosable(false);
 
-        SettingsController settingsController = new SettingsController();
+        SettingsController settingsController = new SettingsController(newSettings -> {
+            boardTab.getTabPane().getSelectionModel().select(boardTab);
+            gameController.newGame(newSettings);
+            gameController.root.requestFocus();
+        });
         Tab settingsPane = new Tab("Settings", settingsController.root);
         settingsPane.setClosable(false);
 
@@ -29,7 +33,7 @@ class ProgramController {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        gameController.newGame();
+        gameController.newGame(settingsController.buildSettings());
         gameController.root.requestFocus();
     }
 

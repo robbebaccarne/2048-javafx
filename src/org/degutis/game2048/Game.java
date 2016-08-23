@@ -6,10 +6,16 @@ class Game {
 
     private Grid grid = new Grid();
 
+    private Settings settings;
+
+    Game(Settings settings) {
+        this.settings = settings;
+    }
+
     ArrayList<Tile> addInitialTiles() {
         ArrayList<Tile> initialTiles = new ArrayList<>();
 
-        for (int i = 0; i < Config.STARTING_TILES; i++)
+        for (int i = 0; i < settings.startingTiles; i++)
             initialTiles.add(grid.addRandomTile());
 
         return initialTiles;

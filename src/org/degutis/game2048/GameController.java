@@ -22,6 +22,7 @@ class GameController {
     private HashMap<Tile, TilePresenter> visibleTileViews;
     private Pane board;
     private Game game;
+    private Settings settings;
     private ParallelTransition activeTransition;
     private boolean sawEndScreen;
     private boolean showingEndScreen;
@@ -49,8 +50,9 @@ class GameController {
         });
     }
 
-    void newGame() {
-        game = new Game();
+    void newGame(Settings settings) {
+        this.settings = settings;
+        game = new Game(this.settings);
         sawEndScreen = false;
         showingEndScreen = false;
 
@@ -189,7 +191,7 @@ class GameController {
         continueButton.setFont(new Font(Config.BUTTON_FONT_SIZE));
         continueButton.setOnAction(e -> {
             showingEndScreen = false;
-            newGame();
+            newGame(this.settings);
             root.requestFocus();
         });
         gridPane.add(continueButton, nextCol, 1);
